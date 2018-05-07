@@ -29,7 +29,6 @@ temperatuur = 21
 LARGE_FRONT= ("Verdana",9)
 
 class scheduleMainScreen(tk.Tk):
-    
     def __init__(self,*args,**kwargs):
         tk.Tk.__init__(self,*args,**kwargs)
         container = tk.Frame(self)
@@ -51,6 +50,10 @@ class scheduleMainScreen(tk.Tk):
 
 class scheduleDay(tk.Frame):
     def __init__(self, parent,controller):
+        self.selected_item = None
+        self.Build_Treeview(parent,controller)
+
+    def Build_Treeview(self, parent,controller):
         tk.Frame.__init__(self,parent)
         self.init_buttons(controller)   
         self.tv = ttk.Treeview(self,  height=15)
@@ -73,7 +76,8 @@ class scheduleDay(tk.Frame):
         
         ttk.Style().configure("Treeview", font= ('', 11), background="#383838", 
         foreground="white", fieldbackground="yellow")
-
+        self.Fill_Treeview()
+    def Fill_Treeview(self):
         self.tv.insert("","end",text = "",values = ("1","8.30", "OMARA", "INF3A", "INFLAB01"))
         self.tv.insert("","end",text = "",values = ("2","9.20", "OMARA", "INF3A", "INFLAB01"))
         self.tv.insert("","end",text = "",values = ("3","10.30", "OMARA", "INF3A", "INFLAB01"))
@@ -90,25 +94,60 @@ class scheduleDay(tk.Frame):
         self.tv.insert("","end",text = "",values = ("14","20.20", "", "", ""))
         self.tv.insert("","end",text = "",values = ("15","21.10", "", "", ""))
 
+        
+    def select_item(self,a):
+        try:
+            item = self.tv.selection()[0]
+            self.selected_item = item
+            print(self.selected_item)
+        except:
+            print("Nothing selected :/")
+        
+    def reserve_room(self,selected):
+        try:
+            item = self.tv.selection()[0]
+        except:
+            print("Nothing selected :/")
+        if selected == None or self.tv.item(selected)['values'][2] != "":
+            print("Too bad")
+        elif (self.tv.item(selected)['values'][2] == ""): 
+            value= self.tv.item(selected)['values']
+            self.tv.item(selected,values=(value[0],
+                                      value[1],
+                                      "Student gereserveerd",
+                                      "Student gereserveerd",
+                                      "Zelf studie"))
 
-    def select_item(self, a):
-        test_str_library = self.tv.item(self.tv.selection())
-        item = self.tv.selection()[0]
-        if (self.tv.item(item)['values'][2] == ""): 
-            print("Geresveerd!")
-
-    def reserve_room(self):
-        pass
+    def delete_reservation(self):
+        try:
+            item = self.tv.selection()[0]
+        except:
+            print("Nothing selected :/")
+        if (self.tv.item(item)['values'][2] == "Student gereserveerd"):
+            value= self.tv.item(item)['values']
+            self.tv.item(item,values=(value[0],
+                                      value[1],
+                                      "",
+                                      "",
+                                      ""))
+        else:
+            print("Too bad")
 
     def init_buttons(self,controller):
-        HROpicture = tk.PhotoImage(file="HRO.png")
-        QRcode = tk.PhotoImage(file="QRcode.png")
-        picture = ttk.Label(self,image=QRcode)
+        HROlogo = tk.PhotoImage(file="./Images/HRO.png")
+        QRcode = tk.PhotoImage(file="./Images/QRcode.png")
         iname = tk.Canvas(bg="black",height=80,width=80)
-        iname.pack(side="top")
-        image = iname.create_image(900,50,anchor="n",image=QRcode)
-        ttk.Button(self, text = "Reserveer kamer", width=20,command=self.reserve_room).grid(row=0, column=1, sticky="W")
-        ttk.Button(self, text="Week rooster", width=20, command=lambda:controller.show_frame(scheduleWeek)).grid(row=0,column=3,sticky="W")
+        iname.pack()
+        imageQR = iname.create_image(700,50,anchor="n",image=QRcode)
+        imageHR= iname.create_image(700,30,anchor="n",image=HROlogo)
+        HROpicture = ttk.Label(self,image=HROlogo).grid(row = 0, column=9,sticky="W")
+        QRpicture = ttk.Label(self,image=QRcode)
+
+        ttk.Label(self,text="De kamer temperatuur is: " + str(temperatuur)+ " graden.").grid(row= 0, column=7,sticky="W")
+        ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=3, sticky="W")
+        ttk.Button(self, text="Week rooster", width=20, command=lambda:controller.show_frame(scheduleWeek)).grid(row=0,column=1,sticky="W")
+        ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=5, sticky="W")
+
      
 
 class scheduleWeek(tk.Frame):
@@ -127,7 +166,6 @@ class scheduleWeek(tk.Frame):
             cols = cols + 1
 
 roosterMain = scheduleMainScreen()
+roosterMain.title("Room signing")
 roosterMain.geometry("800x600")
 roosterMain.mainloop()
-
-
