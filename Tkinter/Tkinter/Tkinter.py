@@ -1,5 +1,9 @@
 import tkinter as tk
 from tkinter import ttk
+import requests
+import json
+import simplejson
+
 
 # Dummy Day data
 lesList = ["Les uur","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
@@ -7,7 +11,8 @@ startList = ["Start","8:30","9:20", "10:30","11:20","12:10","13:00","13:50","15:
 docentList = ["Docent","OMARA", "OMARA","","OMARA","", "","OMARA","OMARA","OMARA", "OMARA","OMARA","","OMARA", "OMARA",""]
 klasList = ["Klas","INF3A", "INF3A","","INF3A","", "","INF3A","INF3A","INF3A", "INF3A","INF3A","","INF3A", "INF3A",""]
 vakList = ["Vak","INFLAB01","INFLAB01","","INFLAB01","","","INFLAB01","INFLAB01","INFLAB01","INFLAB01","INFLAB01","","INFLAB01","INFLAB01",""]
-
+lesList2 = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
+startList2 = ["8:30","9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
 # Dummy Week Data
 maandagList = ["Maandag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
 dinsdagList = ["Dinsdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
@@ -15,7 +20,7 @@ woensdagList = ["Woensdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF
 donderdagList = ["Donderdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
 vrijdagList = ["Vrijdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
 
-#List of week list
+#List of week list Dummy
 weekList = [maandagList,dinsdagList,woensdagList,donderdagList,vrijdagList]
 
 #List of day list
@@ -36,7 +41,6 @@ class scheduleMainScreen(tk.Tk):
         container.grid_rowconfigure(0,weight=1)
         container.grid_columnconfigure(0,weight=1)
         self.frames= {}
-
         for F in (scheduleDay,scheduleWeek):
             frame = F(container,self)
             self.frames[F] = frame
@@ -49,13 +53,14 @@ class scheduleMainScreen(tk.Tk):
 
 
 class scheduleDay(tk.Frame):
-    def __init__(self, parent,controller):
-        self.selected_item = None
-        self.Build_Treeview(parent,controller)
-
-    def Build_Treeview(self, parent,controller):
+    def __init__(self, parent,controller):  
         tk.Frame.__init__(self,parent)
-        self.init_buttons(controller)   
+        self.selected_item = None
+        self.parent = parent
+        self.controller = controller
+        self.init_buttons(self.controller)
+        self.Build_Treeview(self.parent,self.controller)
+    def Build_Treeview(self, parent,controller): 
         self.tv = ttk.Treeview(self,  height=15)
         self.tv['columns'] = ('lesuur', 'start', 'docent', 'klas', 'vak')
         self.tv.heading("#0", text='', anchor='w')
@@ -78,23 +83,30 @@ class scheduleDay(tk.Frame):
         foreground="white", fieldbackground="yellow")
         self.Fill_Treeview()
     def Fill_Treeview(self):
-        self.tv.insert("","end",text = "",values = ("1","8.30", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("2","9.20", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("3","10.30", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("4","11.20", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("5","12.10", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("6","13.00", "", "", ""))
-        self.tv.insert("","end",text = "",values = ("7","13.50", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("8","15.00", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("9","15.50", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("10","17.00", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("11","17.50", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("12","18.40", "OMARA", "INF3A", "INFLAB01"))
-        self.tv.insert("","end",text = "",values = ("13","19.30", "", "", ""))
-        self.tv.insert("","end",text = "",values = ("14","20.20", "", "", ""))
-        self.tv.insert("","end",text = "",values = ("15","21.10", "", "", ""))
-
-        
+        request = requests
+        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/23"
+        response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
+        jsonData = simplejson.loads(response.content)
+        newJsonData = []
+        for data in jsonData:
+            if (data['WeekDay'] == 3):
+                newJsonData.append(data)
+        n = 1
+        while(n < 16):
+            print(n)
+            for data in newJsonData:
+                if (data['StartBlock'] == n):
+                    b = 0
+                    entry = False
+                    while (data['StartBlock'] + b < data['EndBlock'] + 1):
+                        self.tv.insert("","end",text = "",values = (data['StartBlock'] + b,startList[n], data['Teacher'], data['Class'], data['CourseCode']))
+                        b = b + 1
+                        if (entry ==False):
+                            entry = True
+                            n = n + 1
+                else:
+                    self.tv.insert("","end",text = "",values = (lesList[n],startList[n],"","",""))
+            n = n + 1
     def select_item(self,a):
         try:
             item = self.tv.selection()[0]
@@ -133,13 +145,18 @@ class scheduleDay(tk.Frame):
         else:
             print("Too bad")
 
+    def Destroy(self):
+        self.update()
+
     def init_buttons(self,controller):
         HROlogo = tk.PhotoImage(file="./Images/HRO.png")
         QRcode = tk.PhotoImage(file="./Images/QRcode.png")
         iname = tk.Canvas(bg="black",height=80,width=80)
         iname.pack()
+
         imageQR = iname.create_image(700,50,anchor="n",image=QRcode)
         imageHR= iname.create_image(700,30,anchor="n",image=HROlogo)
+
         HROpicture = ttk.Label(self,image=HROlogo).grid(row = 0, column=9,sticky="W")
         QRpicture = ttk.Label(self,image=QRcode)
 
@@ -148,7 +165,6 @@ class scheduleDay(tk.Frame):
         ttk.Button(self, text="Week rooster", width=20, command=lambda:controller.show_frame(scheduleWeek)).grid(row=0,column=1,sticky="W")
         ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=5, sticky="W")
 
-     
 
 class scheduleWeek(tk.Frame):
     def __init__(self, parent,controller):
@@ -156,16 +172,18 @@ class scheduleWeek(tk.Frame):
         button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:controller.show_frame(scheduleDay)).grid(row=0,column=0,sticky="e")
         self.init_table()
     def init_table(self):
-        rows = 1
-        cols = 0
-        for F in (weekList):
-            for X in (F):
-                tk.Label(self, text=X).grid(row=rows,column=cols)
-                rows = rows + 1
-            rows = 1
-            cols = cols + 1
+        pass
+        #rows = 1
+        #cols = 0
+        #for F in (weekList):
+        #    for X in (F):
+        #        tk.Label(self, text=X).grid(row=rows,column=cols)
+        #        rows = rows + 1
+        #    rows = 1
+        #    cols = cols + 1
 
 roosterMain = scheduleMainScreen()
 roosterMain.title("Room signing")
 roosterMain.geometry("800x600")
-roosterMain.mainloop()
+while True:
+    roosterMain.update()
