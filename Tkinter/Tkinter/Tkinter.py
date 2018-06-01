@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 import requests
-import json
 import simplejson
 
 
@@ -84,29 +83,35 @@ class scheduleDay(tk.Frame):
         self.Fill_Treeview()
     def Fill_Treeview(self):
         request = requests
-        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/23"
+        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/22"
         response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
         jsonData = simplejson.loads(response.content)
         newJsonData = []
         for data in jsonData:
             if (data['WeekDay'] == 3):
                 newJsonData.append(data)
+        print(newJsonData)
         n = 1
-        while(n < 16):
+        while(n != 16):
             print(n)
+            if (newJsonData == []):
+                break
             for data in newJsonData:
-                if (data['StartBlock'] == n):
-                    b = 0
-                    entry = False
-                    while (data['StartBlock'] + b < data['EndBlock'] + 1):
-                        self.tv.insert("","end",text = "",values = (data['StartBlock'] + b,startList[n], data['Teacher'], data['Class'], data['CourseCode']))
+                b = 0
+                print("The value of n is : " + str(n))
+                print("Checking for : " + str(data['StartBlock']))
+                if ( data['StartBlock'] == n):
+                    print("Hello")
+                    while (data['StartBlock'] + b < data['EndBlock']+ 1):
+                        self.tv.insert("","end",text = "",values = (n + b,startList[n + b], data['Teacher'], data['Class'], data['CourseCode']))
                         b = b + 1
-                        if (entry ==False):
-                            entry = True
-                            n = n + 1
-                else:
-                    self.tv.insert("","end",text = "",values = (lesList[n],startList[n],"","",""))
-            n = n + 1
+            print(b)
+            if (b == 0):
+                self.tv.insert("","end",text = "",values = (n,startList[n],"","",""))
+                n = n + 1
+            else:
+                n = n + b
+
     def select_item(self,a):
         try:
             item = self.tv.selection()[0]
