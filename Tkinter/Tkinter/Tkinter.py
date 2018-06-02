@@ -90,22 +90,16 @@ class scheduleDay(tk.Frame):
         for data in jsonData:
             if (data['WeekDay'] == 3):
                 newJsonData.append(data)
-        print(newJsonData)
         n = 1
         while(n != 16):
-            print(n)
             if (newJsonData == []):
                 break
             for data in newJsonData:
                 b = 0
-                print("The value of n is : " + str(n))
-                print("Checking for : " + str(data['StartBlock']))
                 if ( data['StartBlock'] == n):
-                    print("Hello")
                     while (data['StartBlock'] + b < data['EndBlock']+ 1):
                         self.tv.insert("","end",text = "",values = (n + b,startList[n + b], data['Teacher'], data['Class'], data['CourseCode']))
                         b = b + 1
-            print(b)
             if (b == 0):
                 self.tv.insert("","end",text = "",values = (n,startList[n],"","",""))
                 n = n + 1
@@ -177,9 +171,33 @@ class scheduleWeek(tk.Frame):
         button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:controller.show_frame(scheduleDay)).grid(row=0,column=0,sticky="e")
         self.init_table()
     def init_table(self):
-        pass
-        #rows = 1
-        #cols = 0
+        request = requests
+        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/22"
+        response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
+        jsonData = simplejson.loads(response.content)
+        rows = 1
+        print(jsonData)
+        while ( rows < 16):
+            cols = 0
+            if (jsonData == []):
+                break
+            while (cols < 5):
+                for data in jsonData:
+                    b = 0
+                    if (data['WeekDay'] == cols + 1 and data['StartBlock'] == rows):
+                        while (data['StartBlock'] + b < data['EndBlock']+ 1):
+                            print(str(data['StartBlock']) + " Startblock ")
+                            print(str(data['EndBlock']) + " Endblock ")
+                            print(cols + b)
+                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode'])).grid(row=rows,column=cols + b)
+                            b = b + 1
+                if (b == 0):
+                    tk.Label(self, text="Nothing").grid(row=rows,column=cols)
+                    cols = cols + 1
+                else:
+                    cols = cols + b
+            rows = rows + 1
+
         #for F in (weekList):
         #    for X in (F):
         #        tk.Label(self, text=X).grid(row=rows,column=cols)
@@ -189,6 +207,6 @@ class scheduleWeek(tk.Frame):
 
 roosterMain = scheduleMainScreen()
 roosterMain.title("Room signing")
-roosterMain.geometry("800x600")
+roosterMain.geometry("1280x900")
 while True:
     roosterMain.update()
