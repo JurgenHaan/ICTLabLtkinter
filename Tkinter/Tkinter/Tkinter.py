@@ -12,18 +12,9 @@ klasList = ["Klas","INF3A", "INF3A","","INF3A","", "","INF3A","INF3A","INF3A", "
 vakList = ["Vak","INFLAB01","INFLAB01","","INFLAB01","","","INFLAB01","INFLAB01","INFLAB01","INFLAB01","INFLAB01","","INFLAB01","INFLAB01",""]
 lesList2 = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
 startList2 = ["8:30","9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
+
 # Dummy Week Data
-maandagList = ["Maandag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
-dinsdagList = ["Dinsdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
-woensdagList = ["Woensdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "", "", ""]
-donderdagList = ["Donderdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
-vrijdagList = ["Vrijdag", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "", "INF3C MINUA INFLAB01", "INF3C MINUA INFLAB01", "", "", "", ""]
-
-#List of week list Dummy
-weekList = [maandagList,dinsdagList,woensdagList,donderdagList,vrijdagList]
-
-#List of day list
-dayList = [lesList,startList,docentList,klasList,vakList]
+dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
 
 # Dummy temp data.
 # Data opvragen van sensor
@@ -53,13 +44,22 @@ class scheduleMainScreen(tk.Tk):
 
 class scheduleDay(tk.Frame):
     def __init__(self, parent,controller):  
+        # Init frame
         tk.Frame.__init__(self,parent)
+
+        # Sets selected item to none
         self.selected_item = None
         self.parent = parent
         self.controller = controller
+
+        # Inits the buttons and pictures
         self.init_buttons(self.controller)
+
+        # Builds foundation of the treeview
         self.Build_Treeview(self.parent,self.controller)
+
     def Build_Treeview(self, parent,controller): 
+        # Init treeview
         self.tv = ttk.Treeview(self,  height=15)
         self.tv['columns'] = ('lesuur', 'start', 'docent', 'klas', 'vak')
         self.tv.heading("#0", text='', anchor='w')
@@ -82,14 +82,20 @@ class scheduleDay(tk.Frame):
         foreground="white", fieldbackground="yellow")
         self.Fill_Treeview()
     def Fill_Treeview(self):
+
+        # Requests for data  : May take time
         request = requests
         url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/22"
         response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
         jsonData = simplejson.loads(response.content)
         newJsonData = []
+
+        # Checks for weekdays  - we only want 1 day
         for data in jsonData:
             if (data['WeekDay'] == 3):
                 newJsonData.append(data)
+
+        # Fill treeview
         n = 1
         while(n != 16):
             if (newJsonData == []):
@@ -107,6 +113,7 @@ class scheduleDay(tk.Frame):
                 n = n + b
 
     def select_item(self,a):
+
         try:
             item = self.tv.selection()[0]
             self.selected_item = item
@@ -148,6 +155,7 @@ class scheduleDay(tk.Frame):
         self.update()
 
     def init_buttons(self,controller):
+        # Load images 
         HROlogo = tk.PhotoImage(file="./Images/HRO.png")
         QRcode = tk.PhotoImage(file="./Images/QRcode.png")
         iname = tk.Canvas(bg="black",height=80,width=80)
@@ -159,6 +167,7 @@ class scheduleDay(tk.Frame):
         HROpicture = ttk.Label(self,image=HROlogo).grid(row = 0, column=9,sticky="W")
         QRpicture = ttk.Label(self,image=QRcode)
 
+        # Pictures and everything
         ttk.Label(self,text="De kamer temperatuur is: " + str(temperatuur)+ " graden.").grid(row= 0, column=7,sticky="W")
         ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=3, sticky="W")
         ttk.Button(self, text="Week rooster", width=20, command=lambda:controller.show_frame(scheduleWeek)).grid(row=0,column=1,sticky="W")
@@ -167,44 +176,55 @@ class scheduleDay(tk.Frame):
 
 class scheduleWeek(tk.Frame):
     def __init__(self, parent,controller):
+        # Init frame
         tk.Frame.__init__(self,parent)
+
+        # Back to dagRooster button
         button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:controller.show_frame(scheduleDay)).grid(row=0,column=0,sticky="e")
+
+        # Init table view
         self.init_table()
+
     def init_table(self):
+
+        # Requests for data  : May take time
         request = requests
         url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/22"
         response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
         jsonData = simplejson.loads(response.content)
-        rows = 1
-        print(jsonData)
-        while ( rows < 16):
-            cols = 0
-            if (jsonData == []):
-                break
-            while (cols < 5):
-                for data in jsonData:
-                    b = 0
-                    if (data['WeekDay'] == cols + 1 and data['StartBlock'] == rows):
-                        while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                            print(str(data['StartBlock']) + " Startblock ")
-                            print(str(data['EndBlock']) + " Endblock ")
-                            print(cols + b)
-                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode'])).grid(row=rows,column=cols + b)
-                            b = b + 1
-                if (b == 0):
-                    tk.Label(self, text="Nothing").grid(row=rows,column=cols)
-                    cols = cols + 1
-                else:
-                    cols = cols + b
+
+        # Fill outer
+        cols = 0
+        rows = 0
+        tk.Label(self, text=lesList[cols]).grid(row=1,column=0)
+        while ( cols < 5):
+            tk.Label(self, text=dagList[cols]).grid(row=1,column=cols + 1)
+            cols = cols + 1
+        while ( rows < 15):
+            tk.Label(self, text=lesList[rows + 1] + "  :  " + startList[rows+ 1]).grid(row=rows + 2,column=0)
             rows = rows + 1
 
-        #for F in (weekList):
-        #    for X in (F):
-        #        tk.Label(self, text=X).grid(row=rows,column=cols)
-        #        rows = rows + 1
-        #    rows = 1
-        #    cols = cols + 1
+        # Fill inner schedule
+        cols = 1
+        while ( cols < 6):
+            if (jsonData == []):
+                break
+            rows = 2
+            while (rows < 17):
+                b = 0
+                for data in jsonData:
+                    if (data['WeekDay'] == cols and data['StartBlock'] == rows - 1):
+                        while (data['StartBlock'] + b < data['EndBlock']+ 1):
+                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode'])).grid(row=rows + b,column=cols )
+                            b = b + 1
+                if (b == 0):
+                    tk.Label(self, text="       ").grid(row=rows,column=cols)
+                    rows = rows + 1
+                else:
+                    rows = rows + b
+            cols = cols + 1
 
+# Tkinter loop
 roosterMain = scheduleMainScreen()
 roosterMain.title("Room signing")
 roosterMain.geometry("1280x900")
