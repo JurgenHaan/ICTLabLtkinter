@@ -2,16 +2,12 @@ import tkinter as tk
 from tkinter import ttk
 import requests
 import simplejson
+import datetime
 
 
 # Dummy Day data
 lesList = ["Les uur","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
 startList = ["Start","8:30","9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
-docentList = ["Docent","OMARA", "OMARA","","OMARA","", "","OMARA","OMARA","OMARA", "OMARA","OMARA","","OMARA", "OMARA",""]
-klasList = ["Klas","INF3A", "INF3A","","INF3A","", "","INF3A","INF3A","INF3A", "INF3A","INF3A","","INF3A", "INF3A",""]
-vakList = ["Vak","INFLAB01","INFLAB01","","INFLAB01","","","INFLAB01","INFLAB01","INFLAB01","INFLAB01","INFLAB01","","INFLAB01","INFLAB01",""]
-lesList2 = ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
-startList2 = ["8:30","9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
 
 # Dummy Week Data
 dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
@@ -20,45 +16,36 @@ dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
 # Data opvragen van sensor
 temperatuur = 21
 
-# Meh font
-LARGE_FRONT= ("Verdana",9)
-
 class scheduleMainScreen(tk.Tk):
-    def __init__(self,*args,**kwargs):
-        tk.Tk.__init__(self,*args,**kwargs)
-        container = tk.Frame(self)
-        container.pack(side="top",fill="both",expand= True)
-        container.grid_rowconfigure(0,weight=1)
-        container.grid_columnconfigure(0,weight=1)
-        self.frames= {}
-        for F in (scheduleDay,scheduleWeek):
-            frame = F(container,self)
-            self.frames[F] = frame
-            frame.grid(row=0,column=0,sticky="nsew")
-        self.show_frame(scheduleDay)
+    def __init__(self):
+        tk.Tk.__init__(self)
+        self._frame = None
+        self.switch_frame(scheduleDay)
 
-    def show_frame(self,cont):
-        frame = self.frames[cont]
-        frame.tkraise()
+    def switch_frame(self, frame_class):
+        """Destroys current frame and replaces it with a new one."""
+        new_frame = frame_class(self)
+        if self._frame is not None:
+            self._frame.destroy()
+        self._frame = new_frame
+        self._frame.pack()
 
 
 class scheduleDay(tk.Frame):
-    def __init__(self, parent,controller):  
+    def __init__(self, master):  
         # Init frame
-        tk.Frame.__init__(self,parent)
+        tk.Frame.__init__(self,master)
 
         # Sets selected item to none
         self.selected_item = None
-        self.parent = parent
-        self.controller = controller
-
+        self.master = master
         # Inits the buttons and pictures
-        self.init_buttons(self.controller)
+        self.init_buttons()
 
         # Builds foundation of the treeview
-        self.Build_Treeview(self.parent,self.controller)
+        self.Build_Treeview(self.master)
 
-    def Build_Treeview(self, parent,controller): 
+    def Build_Treeview(self,master): 
         # Init treeview
         self.tv = ttk.Treeview(self,  height=15)
         self.tv['columns'] = ('lesuur', 'start', 'docent', 'klas', 'vak')
@@ -154,33 +141,34 @@ class scheduleDay(tk.Frame):
     def Destroy(self):
         self.update()
 
-    def init_buttons(self,controller):
+    def init_buttons(self):
         # Load images 
-        HROlogo = tk.PhotoImage(file="./Images/HRO.png")
-        QRcode = tk.PhotoImage(file="./Images/QRcode.png")
-        iname = tk.Canvas(bg="black",height=80,width=80)
-        iname.pack()
+        #HROlogo = tk.PhotoImage(file="./Images/HRO.png")
+        #QRcode = tk.PhotoImage(file="./Images/QRcode.png")
+        #iname = tk.Canvas(bg="black",height=80,width=80)
+        #iname.pack()
 
-        imageQR = iname.create_image(700,50,anchor="n",image=QRcode)
-        imageHR= iname.create_image(700,30,anchor="n",image=HROlogo)
+        #imageQR = iname.create_image(700,50,anchor="n",image=QRcode)
+        #imageHR= iname.create_image(700,30,anchor="n",image=HROlogo)
 
-        HROpicture = ttk.Label(self,image=HROlogo).grid(row = 0, column=9,sticky="W")
-        QRpicture = ttk.Label(self,image=QRcode)
+        #HROpicture = ttk.Label(self,image=HROlogo).grid(row = 0, column=9,sticky="W")
+        #QRpicture = ttk.Label(self,image=QRcode)
 
         # Pictures and everything
         ttk.Label(self,text="De kamer temperatuur is: " + str(temperatuur)+ " graden.").grid(row= 0, column=7,sticky="W")
         ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=3, sticky="W")
-        ttk.Button(self, text="Week rooster", width=20, command=lambda:controller.show_frame(scheduleWeek)).grid(row=0,column=1,sticky="W")
+        ttk.Button(self, text="Week rooster", width=20, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=1,sticky="W")
         ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=5, sticky="W")
 
 
 class scheduleWeek(tk.Frame):
-    def __init__(self, parent,controller):
+    def __init__(self, master):
         # Init frame
-        tk.Frame.__init__(self,parent)
+        tk.Frame.__init__(self,master)
+
 
         # Back to dagRooster button
-        button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:controller.show_frame(scheduleDay)).grid(row=0,column=0,sticky="e")
+        button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:master.switch_frame(scheduleDay)).grid(row=0,column=0,sticky="e")
 
         # Init table view
         self.init_table()
@@ -189,22 +177,23 @@ class scheduleWeek(tk.Frame):
 
         # Requests for data  : May take time
         request = requests
-        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/22"
+        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/H.4.308/22"
         response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
         jsonData = simplejson.loads(response.content)
 
         # Fill outer
         cols = 0
         rows = 0
-        tk.Label(self, text=lesList[cols]).grid(row=1,column=0)
+        tk.Label(self, text=lesList[cols],font="Verdana 9 bold").grid(row=1,column=0)
         while ( cols < 5):
-            tk.Label(self, text=dagList[cols]).grid(row=1,column=cols + 1)
+            tk.Label(self, text=dagList[cols],font="Verdana 9 bold").grid(row=1,column=cols + 1)
             cols = cols + 1
         while ( rows < 15):
-            tk.Label(self, text=lesList[rows + 1] + "  :  " + startList[rows+ 1]).grid(row=rows + 2,column=0)
+            tk.Label(self, text=lesList[rows + 1] + "  :  " + startList[rows+ 1],font="Verdana 9 bold").grid(row=rows + 2,column=0)
             rows = rows + 1
 
         # Fill inner schedule
+        print("Hello")
         cols = 1
         while ( cols < 6):
             if (jsonData == []):
@@ -225,8 +214,9 @@ class scheduleWeek(tk.Frame):
             cols = cols + 1
 
 # Tkinter loop
-roosterMain = scheduleMainScreen()
-roosterMain.title("Room signing")
-roosterMain.geometry("1280x900")
-while True:
-    roosterMain.update()
+if __name__ == "__main__":
+    roosterMain = scheduleMainScreen()
+    roosterMain.geometry("800x500")
+    roosterMain.title("Room signing")
+    roosterMain.mainloop()
+    
