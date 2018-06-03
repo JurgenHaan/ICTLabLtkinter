@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>30f5c2f4-99d4-4db3-835e-e7cb8ca8beb4</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>Tkinter.py</StartupFile>
+    <StartupFile>TkinterEntry.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Tkinter.py" />
+    <Compile Include="DaySchedule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WeekSchedule.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TkinterEntry.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

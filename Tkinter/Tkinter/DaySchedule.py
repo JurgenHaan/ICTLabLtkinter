@@ -1,35 +1,8 @@
+import TkinterEntry
+import WeekSchedule as weekSchedule
+
 import tkinter as tk
 from tkinter import ttk
-import requests
-import simplejson
-import datetime
-
-
-# Dummy Day data
-lesList = ["Les uur","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15"]
-startList = ["Start","8:30","9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
-
-# Dummy Week Data
-dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
-
-# Dummy temp data.
-# Data opvragen van sensor
-temperatuur = 21
-
-class scheduleMainScreen(tk.Tk):
-    def __init__(self):
-        tk.Tk.__init__(self)
-        self._frame = None
-        self.switch_frame(scheduleDay)
-
-    def switch_frame(self, frame_class):
-        """Destroys current frame and replaces it with a new one."""
-        new_frame = frame_class(self)
-        if self._frame is not None:
-            self._frame.destroy()
-        self._frame = new_frame
-        self._frame.pack()
-
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):  
@@ -68,33 +41,24 @@ class scheduleDay(tk.Frame):
         ttk.Style().configure("Treeview", font= ('', 11), background="#383838", 
         foreground="white", fieldbackground="yellow")
         self.Fill_Treeview()
+
     def Fill_Treeview(self):
-
         # Requests for data  : May take time
-        request = requests
-        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/22"
-        response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
-        jsonData = simplejson.loads(response.content)
-        newJsonData = []
-
-        # Checks for weekdays  - we only want 1 day
-        for data in jsonData:
-            if (data['WeekDay'] == 3):
-                newJsonData.append(data)
+        jsonData = TkinterEntry.RetrieveData(True)
 
         # Fill treeview
         n = 1
         while(n != 16):
-            if (newJsonData == []):
+            if (jsonData == []):
                 break
-            for data in newJsonData:
+            for data in jsonData:
                 b = 0
                 if ( data['StartBlock'] == n):
                     while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                        self.tv.insert("","end",text = "",values = (n + b,startList[n + b], data['Teacher'], data['Class'], data['CourseCode']))
+                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], data['Class'], data['CourseCode']))
                         b = b + 1
             if (b == 0):
-                self.tv.insert("","end",text = "",values = (n,startList[n],"","",""))
+                self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))
                 n = n + 1
             else:
                 n = n + b
@@ -155,68 +119,7 @@ class scheduleDay(tk.Frame):
         #QRpicture = ttk.Label(self,image=QRcode)
 
         # Pictures and everything
-        ttk.Label(self,text="De kamer temperatuur is: " + str(temperatuur)+ " graden.").grid(row= 0, column=7,sticky="W")
+        ttk.Label(self,text="De kamer temperatuur is: " + str(TkinterEntry.temperatuur)+ " graden.").grid(row= 0, column=7,sticky="W")
         ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=3, sticky="W")
-        ttk.Button(self, text="Week rooster", width=20, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=1,sticky="W")
+        ttk.Button(self, text="Week rooster", width=20, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1,sticky="W")
         ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=5, sticky="W")
-
-
-class scheduleWeek(tk.Frame):
-    def __init__(self, master):
-        # Init frame
-        tk.Frame.__init__(self,master)
-
-
-        # Back to dagRooster button
-        button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:master.switch_frame(scheduleDay)).grid(row=0,column=0,sticky="e")
-
-        # Init table view
-        self.init_table()
-
-    def init_table(self):
-
-        # Requests for data  : May take time
-        request = requests
-        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/H.4.308/22"
-        response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
-        jsonData = simplejson.loads(response.content)
-
-        # Fill outer
-        cols = 0
-        rows = 0
-        tk.Label(self, text=lesList[cols],font="Verdana 9 bold").grid(row=1,column=0)
-        while ( cols < 5):
-            tk.Label(self, text=dagList[cols],font="Verdana 9 bold").grid(row=1,column=cols + 1)
-            cols = cols + 1
-        while ( rows < 15):
-            tk.Label(self, text=lesList[rows + 1] + "  :  " + startList[rows+ 1],font="Verdana 9 bold").grid(row=rows + 2,column=0)
-            rows = rows + 1
-
-        # Fill inner schedule
-        print("Hello")
-        cols = 1
-        while ( cols < 6):
-            if (jsonData == []):
-                break
-            rows = 2
-            while (rows < 17):
-                b = 0
-                for data in jsonData:
-                    if (data['WeekDay'] == cols and data['StartBlock'] == rows - 1):
-                        while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode'])).grid(row=rows + b,column=cols )
-                            b = b + 1
-                if (b == 0):
-                    tk.Label(self, text="       ").grid(row=rows,column=cols)
-                    rows = rows + 1
-                else:
-                    rows = rows + b
-            cols = cols + 1
-
-# Tkinter loop
-if __name__ == "__main__":
-    roosterMain = scheduleMainScreen()
-    roosterMain.geometry("800x500")
-    roosterMain.title("Room signing")
-    roosterMain.mainloop()
-    
