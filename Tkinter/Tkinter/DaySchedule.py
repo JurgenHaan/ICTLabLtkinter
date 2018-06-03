@@ -4,6 +4,10 @@ import WeekSchedule as weekSchedule
 import tkinter as tk
 from tkinter import ttk
 
+import simplejson
+from datetime import date
+import requests
+
 class scheduleDay(tk.Frame):
     def __init__(self, master):  
         # Init frame
@@ -51,8 +55,8 @@ class scheduleDay(tk.Frame):
         while(n != 16):
             if (jsonData == []):
                 break
+            b = 0
             for data in jsonData:
-                b = 0
                 if ( data['StartBlock'] == n):
                     while (data['StartBlock'] + b < data['EndBlock']+ 1):
                         self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], data['Class'], data['CourseCode']))
