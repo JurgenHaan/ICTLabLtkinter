@@ -1,5 +1,7 @@
 import TkinterEntry
 import WeekSchedule as weekSchedule
+import FrameController as frameController
+import RequestController as requestController
 
 import tkinter as tk
 from tkinter import ttk
@@ -48,7 +50,7 @@ class scheduleDay(tk.Frame):
 
     def Fill_Treeview(self):
         # Requests for data  : May take time
-        jsonData = TkinterEntry.RetrieveData(True)
+        jsonData = requestController.RetrieveData(True)
 
         # Fill treeview
         n = 1
@@ -127,3 +129,4 @@ class scheduleDay(tk.Frame):
         ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=3, sticky="W")
         ttk.Button(self, text="Week rooster", width=20, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1,sticky="W")
         ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=5, sticky="W")
+        ttk.Button(self, text="Refresh screen", width=20, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=6,sticky="e")
