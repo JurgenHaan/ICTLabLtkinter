@@ -20,7 +20,7 @@ def RetrieveData(day):
     #requests for data  : May take time
 
     request = requests
-    url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WN.02.007/" + str(date.today().isocalendar()[1])
+    url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Lokaal/WD.02.018/" + str(date.today().isocalendar()[1])
     response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})        
     jsonData = simplejson.loads(response.content)
 
