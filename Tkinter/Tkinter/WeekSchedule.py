@@ -3,18 +3,16 @@ import DaySchedule as DaySchedule
 import tkinter as tk
 from tkinter import ttk
 import RequestController as requestController
+from PIL import Image,ImageTk
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
 
-        # Back to dagRooster button
-        ttk.Button(self, text="Dag rooster", width=20, command=lambda:master.switch_frame(DaySchedule.scheduleDay)).grid(row=0,column=0,sticky="e")
+        self.master = master
 
-        # Refresh screen button
-        ttk.Button(self, text="Refresh screen", width=20, command=lambda:master.switch_frame(scheduleWeek)).grid(row=0,column=5,sticky="e")
-        
+        self.init_buttons()
         # Init table view
         self.init_table()
 
@@ -51,3 +49,16 @@ class scheduleWeek(tk.Frame):
                 else:
                     rows = rows + b
             cols = cols + 1
+    def init_buttons(self):
+        # HRO image load
+        logo = ImageTk.PhotoImage(Image.open("./Images/HRO.png"))
+        HROpicture = ttk.Label(self,image=logo)
+        HROpicture.image = logo
+        HROpicture.grid(row= 0, column=0)
+
+        # Back to day schedule button
+        ttk.Button(self, text="Dag rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(DaySchedule.scheduleDay)).grid(row=0,column=1)
+
+        # Refresh screen button - if information might have changed
+        ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=3)
+        

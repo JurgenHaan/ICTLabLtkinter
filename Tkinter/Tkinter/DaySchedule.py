@@ -5,7 +5,7 @@ import RequestController as requestController
 
 import tkinter as tk
 from tkinter import ttk
-
+from PIL import Image, ImageTk
 import simplejson
 from datetime import date
 import requests
@@ -17,7 +17,10 @@ class scheduleDay(tk.Frame):
 
         # Sets selected item to none
         self.selected_item = None
+
+        # Creates variable for the master class FrameController
         self.master = master
+
         # Inits the buttons and pictures
         self.init_buttons()
 
@@ -108,25 +111,21 @@ class scheduleDay(tk.Frame):
         else:
             print("Too bad")
 
-    def Destroy(self):
-        self.update()
 
     def init_buttons(self):
+
         # Load images 
-        #HROlogo = tk.PhotoImage(file="./Images/HRO.png")
-        #QRcode = tk.PhotoImage(file="./Images/QRcode.png")
-        #iname = tk.Canvas(bg="black",height=80,width=80)
-        #iname.pack()
-
-        #imageQR = iname.create_image(700,50,anchor="n",image=QRcode)
-        #imageHR= iname.create_image(700,30,anchor="n",image=HROlogo)
-
-        #HROpicture = ttk.Label(self,image=HROlogo).grid(row = 0, column=9,sticky="W")
-        #QRpicture = ttk.Label(self,image=QRcode)
+        logo = ImageTk.PhotoImage(Image.open("./Images/HRO.png"))
+        HROpicture = ttk.Label(self,image=logo)
+        HROpicture.image = logo
+        HROpicture.grid(row= 0, column=0)
 
         # Pictures and everything
-        ttk.Label(self,text="De kamer temperatuur is: " + str(TkinterEntry.temperatuur)+ " graden.").grid(row= 0, column=7,sticky="W")
-        ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=3, sticky="W")
-        ttk.Button(self, text="Week rooster", width=20, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1,sticky="W")
-        ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=5, sticky="W")
-        ttk.Button(self, text="Refresh screen", width=20, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=6,sticky="e")
+        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1)
+        
+        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=3)
+        
+        ttk.Label(self,text="De kamer temperatuur is: \n" + str(TkinterEntry.temperatuur)+ " graden.").grid(row= 0, column=4)
+
+        #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")
+        #ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=7, sticky="W")

@@ -15,7 +15,6 @@ class scheduleMainScreen(tk.Tk):
 
     def switch_frame(self, frame_class):
         # Destroys current frame and replaces it with a new one.
-        print("Skjulp")
 
         #Stores new frame in a variable
         new_frame = frame_class(self)
