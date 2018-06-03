@@ -24,6 +24,12 @@
     <Compile Include="DaySchedule.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FrameController.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RequestController.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="WeekSchedule.py">
       <SubType>Code</SubType>
     </Compile>

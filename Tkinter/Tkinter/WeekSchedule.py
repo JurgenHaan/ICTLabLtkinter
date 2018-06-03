@@ -2,6 +2,7 @@ import TkinterEntry
 import DaySchedule as DaySchedule
 import tkinter as tk
 from tkinter import ttk
+import RequestController as requestController
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
@@ -9,13 +10,16 @@ class scheduleWeek(tk.Frame):
         tk.Frame.__init__(self,master)
 
         # Back to dagRooster button
-        button_edit = ttk.Button(self, text="Dag rooster", width=20, command=lambda:master.switch_frame(DaySchedule.scheduleDay)).grid(row=0,column=0,sticky="e")
+        ttk.Button(self, text="Dag rooster", width=20, command=lambda:master.switch_frame(DaySchedule.scheduleDay)).grid(row=0,column=0,sticky="e")
 
+        # Refresh screen button
+        ttk.Button(self, text="Refresh screen", width=20, command=lambda:master.switch_frame(scheduleWeek)).grid(row=0,column=5,sticky="e")
+        
         # Init table view
         self.init_table()
 
     def init_table(self):
-        jsonData = TkinterEntry.RetrieveData(False)
+        jsonData = requestController.RetrieveData(False)
 
         # Fill outer schedule : Les time + hours
         cols = 0
