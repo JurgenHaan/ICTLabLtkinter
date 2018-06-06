@@ -6,9 +6,6 @@ import RequestController as requestController
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
-import simplejson
-from datetime import date
-import requests
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):  
@@ -31,8 +28,8 @@ class scheduleDay(tk.Frame):
         # Init treeview
         self.tv = ttk.Treeview(self,  height=15)
         self.tv['columns'] = ('lesuur', 'start', 'docent', 'klas', 'vak')
-        self.tv.heading("#0", text='', anchor='w')
-        self.tv.column("#0", stretch="NO", width=5, anchor="w")
+        self.tv.heading("#0", text='')
+        self.tv.column("#0", stretch="NO", width=1)
         self.tv.heading('lesuur', text='Les uur')
         self.tv.column('lesuur', anchor='center', width=100)
         self.tv.heading('start', text='Tijd stip')
@@ -42,13 +39,13 @@ class scheduleDay(tk.Frame):
         self.tv.heading('klas', text='Klas')
         self.tv.column('klas', anchor='center', width=150)
         self.tv.heading('vak', text='Vak')
-        self.tv.column('vak', anchor='center', width=150)
+        self.tv.column('vak', anchor='center', width=200)
         self.tv.bind('<ButtonRelease-1>', self.select_item) 
-        self.tv.grid(row=1, column=0, columnspan=15, padx=5, pady=5)
-        self.treeview = self.tv
-        
-        ttk.Style().configure("Treeview", font= ('', 11), background="#383838", 
+        self.tv.grid(row=1, column=0, columnspan=20, padx=0, pady=20)
+
+        ttk.Style().configure("Treeview", font= ('Verdana', 12), background="#383838", 
         foreground="white", fieldbackground="yellow")
+
         self.Fill_Treeview()
 
     def Fill_Treeview(self):
@@ -121,11 +118,12 @@ class scheduleDay(tk.Frame):
         HROpicture.grid(row= 0, column=0)
 
         # Pictures and everything
-        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1)
+        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=4)
         
-        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=3)
+        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=9)
         
-        ttk.Label(self,text="De kamer temperatuur is: \n" + str(TkinterEntry.temperatuur)+ " graden.").grid(row= 0, column=4)
+        ttk.Label(self,text="De temperatuur in lokaal "+ requestController.room +" is: \n" + str(TkinterEntry.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=10)
 
+        #Options for reserving - NOT USED
         #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")
         #ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=7, sticky="W")
