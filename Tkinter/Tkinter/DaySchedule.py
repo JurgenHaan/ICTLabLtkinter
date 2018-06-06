@@ -61,8 +61,12 @@ class scheduleDay(tk.Frame):
             for data in jsonData:
                 if ( data['StartBlock'] == n):
                     while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], data['Class'], data['CourseCode']))
-                        b = b + 1
+                        if(len(data["Classes"]) >= 1):
+                            self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], data['Classes'][0]['Name'], data['CourseCode']))
+                            b = b + 1
+                        else:
+                            self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], "None", data['CourseCode']))
+                            b = b + 1
             if (b == 0):
                 self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))
                 n = n + 1

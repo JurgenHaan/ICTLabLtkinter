@@ -42,8 +42,12 @@ class scheduleWeek(tk.Frame):
                 for data in jsonData:
                     if (data['WeekDay'] == cols and data['StartBlock'] == rows - 1):
                         while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode']),font="Verdana 9").grid(row=rows + b,column=cols )
-                            b = b + 1
+                            if(len(data["Classes"]) >= 1):
+                                tk.Label(self, text=str(data['Classes'][0]['Name']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode']),font="Verdana 9").grid(row=rows + b,column=cols )
+                                b = b + 1
+                            else:
+                                tk.Label(self, text="None "  + str(data['Teacher']) + " " + str(data['CourseCode']),font="Verdana 9").grid(row=rows + b,column=cols )
+                                b = b + 1
                 if (b == 0):
                     tk.Label(self, text="").grid(row=rows,column=cols)
                     rows = rows + 1
