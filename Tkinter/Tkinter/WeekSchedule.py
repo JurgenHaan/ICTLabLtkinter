@@ -17,17 +17,18 @@ class scheduleWeek(tk.Frame):
         self.init_table()
 
     def init_table(self):
+        # Retrieve data
         jsonData = requestController.RetrieveData(False)
 
         # Fill outer schedule : Les time + hours
         cols = 0
         rows = 0
-        tk.Label(self, text=TkinterEntry.lesList[cols],font="Verdana 9 bold").grid(row=1,column=0)
+        tk.Label(self, text=TkinterEntry.lesList[cols],font="Verdana 10 bold").grid(row=1,column=0)
         while ( cols < 5):
-            tk.Label(self, text=TkinterEntry.dagList[cols],font="Verdana 9 bold").grid(row=1,column=cols + 1)
+            tk.Label(self, text=TkinterEntry.dagList[cols],font="Verdana 10 bold").grid(row=1,column=cols + 1)
             cols = cols + 1
         while ( rows < 15):
-            tk.Label(self, text=TkinterEntry.lesList[rows + 1] + "  :  " + TkinterEntry.startList[rows+ 1],font="Verdana 9 bold").grid(row=rows + 2,column=0)
+            tk.Label(self, text=TkinterEntry.lesList[rows + 1] + "  :  " + TkinterEntry.startList[rows+ 1],font="Verdana 10 bold").grid(row=rows + 2,column=0)
             rows = rows + 1
 
         # Fill inner schedule
@@ -41,14 +42,15 @@ class scheduleWeek(tk.Frame):
                 for data in jsonData:
                     if (data['WeekDay'] == cols and data['StartBlock'] == rows - 1):
                         while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode'])).grid(row=rows + b,column=cols )
+                            tk.Label(self, text=str(data['Class']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode']),font="Verdana 9").grid(row=rows + b,column=cols )
                             b = b + 1
                 if (b == 0):
-                    tk.Label(self, text="       ").grid(row=rows,column=cols)
+                    tk.Label(self, text="").grid(row=rows,column=cols)
                     rows = rows + 1
                 else:
                     rows = rows + b
             cols = cols + 1
+
     def init_buttons(self):
         # HRO image load
         logo = ImageTk.PhotoImage(Image.open("./Images/HRO.png"))
@@ -60,5 +62,7 @@ class scheduleWeek(tk.Frame):
         ttk.Button(self, text="Dag rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(DaySchedule.scheduleDay)).grid(row=0,column=1)
 
         # Refresh screen button - if information might have changed
-        ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=3)
+        ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=2)
+
+        ttk.Label(self,text="Welkom in lokaal "+ requestController.room,font="Verdana 9 bold").grid(row= 0, column=3)
         
