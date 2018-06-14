@@ -16,7 +16,10 @@ class scheduleWeek(tk.Frame):
         # Init table view
         self.Fill_outer()
 
+<<<<<<< HEAD
         self.Fill_inner()
+=======
+>>>>>>> master
     def Fill_outer(self):
         # Fill outer schedule : Les time + hours
         cols = 0
@@ -29,6 +32,11 @@ class scheduleWeek(tk.Frame):
         while ( rows < 15):
             tk.Label(self, text=TkinterEntry.lesList[rows + 1] + "  :  " + TkinterEntry.startList[rows+ 1],font="Verdana 10 bold").grid(row=rows + 2,column=0)
             rows = rows + 1
+        self.Fill_inner()
+
+    def Fill_inner(self):
+        # Retrieve data
+        jsonData = req.RequestController.RetrieveData(False)
 
     def Fill_inner(self):
         # Retrieve data
