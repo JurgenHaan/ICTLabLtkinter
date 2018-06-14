@@ -2,7 +2,7 @@ import TkinterEntry
 import DaySchedule as DaySchedule
 import tkinter as tk
 from tkinter import ttk
-import RequestController as requestController
+import RequestController as req
 from PIL import Image,ImageTk
 
 class scheduleWeek(tk.Frame):
@@ -14,15 +14,14 @@ class scheduleWeek(tk.Frame):
 
         self.init_buttons()
         # Init table view
-        self.init_table()
+        self.Fill_outer()
 
-    def init_table(self):
-        # Retrieve data
-        jsonData = requestController.RetrieveData(False)
-
+        self.Fill_inner()
+    def Fill_outer(self):
         # Fill outer schedule : Les time + hours
         cols = 0
         rows = 0
+
         tk.Label(self, text=TkinterEntry.lesList[cols],font="Verdana 10 bold").grid(row=1,column=0)
         while ( cols < 5):
             tk.Label(self, text=TkinterEntry.dagList[cols],font="Verdana 10 bold").grid(row=1,column=cols + 1)
@@ -31,10 +30,15 @@ class scheduleWeek(tk.Frame):
             tk.Label(self, text=TkinterEntry.lesList[rows + 1] + "  :  " + TkinterEntry.startList[rows+ 1],font="Verdana 10 bold").grid(row=rows + 2,column=0)
             rows = rows + 1
 
+    def Fill_inner(self):
+        # Retrieve data
+        jsonData = req.RequestController.RetrieveData(False)
+
         # Fill inner schedule
         cols = 1
         while ( cols < 6):
-            if (jsonData == []):
+            if (jsonData == ["Lost"]):
+                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row=17, column=1)
                 break
             rows = 2
             while (rows < 17):
@@ -68,5 +72,5 @@ class scheduleWeek(tk.Frame):
         # Refresh screen button - if information might have changed
         ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=2)
 
-        ttk.Label(self,text="Welkom in lokaal "+ requestController.room,font="Verdana 9 bold").grid(row= 0, column=3)
+        ttk.Label(self,text="Welkom in lokaal "+ req.room,font="Verdana 9 bold").grid(row= 0, column=3)
         
