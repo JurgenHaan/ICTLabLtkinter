@@ -51,7 +51,6 @@ class scheduleDay(tk.Frame):
     def Fill_Treeview(self):
         # Requests for data  : May take time
         jsonData = req.RequestController.RetrieveData(True)
-
         # Fill treeview
         n = 1
         while(n != 16):

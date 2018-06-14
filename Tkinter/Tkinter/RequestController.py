@@ -2,32 +2,32 @@ import requests
 import simplejson
 from datetime import date
 import pickle
+import json
 
 # Hardcoded room because of *Insert reasons here*
-room = "H.1.312"
+room = "WD.02.016"
 class RequestController():
     def RetrieveData(day):
-        try:
-            #requests for data  : May take time
-            request = requests
-            url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Classroom/"+ room + "/" + str(date.today().isocalendar()[1])
-            response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})   
-            jsonData = simplejson.loads(response.content)
-            RequestController.SaveToFile(jsonData)
-            RequestController.ReadFromFile()
+          #requests for data  : May take time
+        request = requests
+        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Classroom/"+ room + "/" + str(date.today().isocalendar()[1])
+        response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})   
+        jsonData = simplejson.loads(response.content)
+        if(response.status_code ==200 or jsonData == []):
+            return RequestController.FormData(jsonData,day)
+        else:
+            try:
+                return RequestController.FormData(RequestController.ReadFromFile(),day)
+            except:
+                return []
 
-            if (jsonData ==[]):
-                try:
-                    RequestController.ReadFromFile()
-                except:
-                    return []
-            RequestController.SaveToFile(str(response.content))  
-            if (day):
-                return RequestController.ConvertJson(day,jsonData)
-            else:
-               return jsonData
-        except:
-            return []
+    def FormData(jsonData,day):
+        RequestController.SaveToFile(jsonData)  
+        if (day):
+            return RequestController.ConvertJson(day,jsonData)
+        else:
+            return jsonData
+
     def ConvertJson(day,jsonData):
         # If the Day schedule is requesting data, we only want 1 day - Checks if it for day schedule
         newJsonData = []
@@ -38,10 +38,13 @@ class RequestController():
 
     def SaveToFile(jsonData):
         with open("jsonRoom.txt","w") as room:
-            print(jsonData)
-            room.write(str(jsonData))
+            json.dump(jsonData,room)
             room.close()
+
     def ReadFromFile():
-        with open("jsonRoom.txt","r") as room:
-            simplejson.loads(room.read())
-            room.close()
+        with open("jsonRoom.txt") as room:
+            dataset = str(room.readlines())
+            dataset = dataset[2:]
+            dataset = dataset[:len(dataset)-2]
+            return simplejson.loads(dataset)
+
