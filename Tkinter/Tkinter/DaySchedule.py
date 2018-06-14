@@ -54,7 +54,8 @@ class scheduleDay(tk.Frame):
         # Fill treeview
         n = 1
         while(n != 16):
-            if (jsonData == []):
+            if (jsonData == ["Lost"]):
+                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 2, column=3)
                 break
             b = 0
             for data in jsonData:
@@ -66,7 +67,7 @@ class scheduleDay(tk.Frame):
                         else:
                             self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], "None", data['CourseCode']))
                             b = b + 1
-            if (b == 0):
+            if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))
                 n = n + 1
             else:

@@ -16,6 +16,10 @@ class scheduleWeek(tk.Frame):
         # Init table view
         self.Fill_outer()
 
+<<<<<<< HEAD
+        self.Fill_inner()
+=======
+>>>>>>> master
     def Fill_outer(self):
         # Fill outer schedule : Les time + hours
         cols = 0
@@ -34,10 +38,15 @@ class scheduleWeek(tk.Frame):
         # Retrieve data
         jsonData = req.RequestController.RetrieveData(False)
 
+    def Fill_inner(self):
+        # Retrieve data
+        jsonData = req.RequestController.RetrieveData(False)
+
         # Fill inner schedule
         cols = 1
         while ( cols < 6):
-            if (jsonData == []):
+            if (jsonData == ["Lost"]):
+                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row=17, column=1)
                 break
             rows = 2
             while (rows < 17):
