@@ -44,29 +44,26 @@ class scheduleDay(tk.Frame):
         self.tv.grid(row=1, column=0, columnspan=20, padx=0, pady=20)
 
         ttk.Style().configure("Treeview", font= ('Verdana', 12), background="#383838", 
-        foreground="white", fieldbackground="yellow")
+        foreground="white", fieldbackground="grey")
 
         self.Fill_Treeview()
 
     def Fill_Treeview(self):
         # Requests for data  : May take time
         jsonData = req.RequestController.RetrieveData(True)
+
         # Fill treeview
         n = 1
         while(n != 16):
             if (jsonData == ["Lost"]):
-                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 2, column=3)
+                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
                 break
             b = 0
             for data in jsonData:
-                if ( data['StartBlock'] == n):
-                    while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                        if(len(data["Classes"]) >= 1):
-                            self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], data['Classes'][0]['Name'], data['CourseCode']))
-                            b = b + 1
-                        else:
-                            self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], "None", data['CourseCode']))
-                            b = b + 1
+                if ( data.StartBlock == n):
+                    while (data.StartBlock + b < data.EndBlock + 1):
+                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
+                        b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))
                 n = n + 1
@@ -82,6 +79,7 @@ class scheduleDay(tk.Frame):
         except:
             print("Nothing selected :/")
         
+
     def reserve_room(self,selected):
         try:
             item = self.tv.selection()[0]
@@ -96,6 +94,7 @@ class scheduleDay(tk.Frame):
                                       "Student gereserveerd",
                                       "Student gereserveerd",
                                       "Zelf studie"))
+
 
     def delete_reservation(self):
         try:

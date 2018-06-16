@@ -18,6 +18,6 @@ temperatuur = 21
 # Tkinter loop
 if __name__ == "__main__":
     roosterMain = FrameController.scheduleMainScreen()
-    roosterMain.geometry("1280x720")
+    roosterMain.geometry("900x600")
     roosterMain.title("Room signing")
     roosterMain.mainloop()

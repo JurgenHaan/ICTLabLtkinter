@@ -16,10 +16,7 @@ class scheduleWeek(tk.Frame):
         # Init table view
         self.Fill_outer()
 
-<<<<<<< HEAD
         self.Fill_inner()
-=======
->>>>>>> master
     def Fill_outer(self):
         # Fill outer schedule : Les time + hours
         cols = 0
@@ -32,11 +29,6 @@ class scheduleWeek(tk.Frame):
         while ( rows < 15):
             tk.Label(self, text=TkinterEntry.lesList[rows + 1] + "  :  " + TkinterEntry.startList[rows+ 1],font="Verdana 10 bold").grid(row=rows + 2,column=0)
             rows = rows + 1
-        self.Fill_inner()
-
-    def Fill_inner(self):
-        # Retrieve data
-        jsonData = req.RequestController.RetrieveData(False)
 
     def Fill_inner(self):
         # Retrieve data
@@ -46,20 +38,16 @@ class scheduleWeek(tk.Frame):
         cols = 1
         while ( cols < 6):
             if (jsonData == ["Lost"]):
-                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row=17, column=1)
+                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row=8, column=3)
                 break
             rows = 2
             while (rows < 17):
                 b = 0
                 for data in jsonData:
-                    if (data['WeekDay'] == cols and data['StartBlock'] == rows - 1):
-                        while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                            if(len(data["Classes"]) >= 1):
-                                tk.Label(self, text=str(data['Classes'][0]['Name']) + " "  + str(data['Teacher']) + " " + str(data['CourseCode']),font="Verdana 9").grid(row=rows + b,column=cols )
-                                b = b + 1
-                            else:
-                                tk.Label(self, text="None "  + str(data['Teacher']) + " " + str(data['CourseCode']),font="Verdana 9").grid(row=rows + b,column=cols )
-                                b = b + 1
+                    if (data.Week == cols and data.StartBlock == rows - 1):
+                        while (data.StartBlock + b < data.EndBlock + 1):
+                            tk.Label(self, text=str(data.Classes[0]['Name']) + " "  + str(data.Teacher) + " " + str(data.CourseCode),font="Verdana 9").grid(row=rows + b,column=cols )
+                            b = b + 1
                 if (b == 0):
                     tk.Label(self, text="").grid(row=rows,column=cols)
                     rows = rows + 1
