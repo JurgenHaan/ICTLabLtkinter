@@ -1,86 +1,55 @@
 import requests
 import simplejson
 from datetime import date
-<<<<<<< HEAD
 import json
 import base64
-import tkinter as tk
-
-# Hardcoded room because of *Insert reasons here*
-room = "WD.02.016"
+import ConfigFileParser
+import RoomClass
+import TextFileReader
 
 class RequestController():
     def RetrieveData(day):
         try:
             #requests for data  : May take time
             request = requests
-            url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Classroom/"+ room + "/" + str(date.today().isocalendar()[1])
-            response = request.get(url,headers = {'Authorization': 'Basic ' + str(base64.b64encode(bytes("Pi:WD.02.016","utf8")))[1:].strip("'")})   
+            room = ConfigFileParser.ConfigFileParser()
+            url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Classroom/"+ str(room) + "/" + str(date.today().isocalendar()[1])
+            response = request.get(url,headers = {'Authorization': 'Basic ' + str(base64.b64encode(bytes("Pi:" + str(room),"utf8")))[1:].strip("'")})   
             jsonData = simplejson.loads(response.content)
             return RequestController.FormData(jsonData,day)
         except:
             try:
-                return RequestController.FormData(RequestController.ReadFromFile(),day)
+                return RequestController.FormData(TextFileReader.TextFileReader.ReadFromFile(),day)
             except:
                 return ["Lost"]
 
     def FormData(jsonData,day):
-        RequestController.SaveToFile(jsonData)  
+        TextFileReader.TextFileReader.SaveToFile(jsonData)  
         if (day):
-            return RequestController.ConvertJson(day,jsonData)
+            # If the Day schedule is requesting data, we only want 1 day - Checks if it for day schedule
+            return RequestController.ConvertDayJson(day,jsonData)
         else:
-            return jsonData
+            # Else, it returns the jsondata for the whole week
+            return RequestController.ConvertWeekJson(jsonData)
 
-=======
-import pickle
-import json
+    def ConvertDayJson(day,jsonData):
 
-# Hardcoded room because of *Insert reasons here*
-room = "WD.02.016"
-class RequestController():
-    def RetrieveData(day):
-          #requests for data  : May take time
-        request = requests
-        url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Classroom/"+ room + "/" + str(date.today().isocalendar()[1])
-        response = request.get(url,headers={'Authorization':'tt2', 'Accept':'application/json'})   
-        jsonData = simplejson.loads(response.content)
-        if(response.status_code ==200 or jsonData == []):
-            return RequestController.FormData(jsonData,day)
-        else:
-            try:
-                return RequestController.FormData(RequestController.ReadFromFile(),day)
-            except:
-                return []
-
-    def FormData(jsonData,day):
-        RequestController.SaveToFile(jsonData)  
-        if (day):
-            return RequestController.ConvertJson(day,jsonData)
-        else:
-            return jsonData
-
->>>>>>> master
-    def ConvertJson(day,jsonData):
-        # If the Day schedule is requesting data, we only want 1 day - Checks if it for day schedule
+        # New array of data for json
         newJsonData = []
+
+        # Filters json for the day of the week.
         for data in jsonData:
             if (data['WeekDay'] == date.today().isocalendar()[2]):
-                newJsonData.append(data)
+                newJsonData.append(RoomClass.Rooms(data))
         return newJsonData
 
-    def SaveToFile(jsonData):
-        with open("jsonRoom.txt","w") as room:
-            json.dump(jsonData,room)
-            room.close()
+    def ConvertWeekJson(jsonData):
 
-    def ReadFromFile():
-        with open("jsonRoom.txt") as room:
-            dataset = str(room.readlines())
-            dataset = dataset[2:]
-            dataset = dataset[:len(dataset)-2]
-<<<<<<< HEAD
-            print(dataset)
-=======
->>>>>>> master
-            return simplejson.loads(dataset)
+        # New array of data for json
+        newJsonData = []
+
+        # Filters json for the day of the week.
+        for data in jsonData:
+            newJsonData.append(RoomClass.Rooms(data))
+        return newJsonData
 

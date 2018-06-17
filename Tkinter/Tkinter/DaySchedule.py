@@ -2,15 +2,17 @@ import TkinterEntry
 import WeekSchedule as weekSchedule
 import FrameController as frameController
 import RequestController as req
-
+import ConfigFileParser
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 
 class scheduleDay(tk.Frame):
-    def __init__(self, master):  
+    def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
+
+        self.room = ConfigFileParser.ConfigFileParser()
 
         # Sets selected item to none
         self.selected_item = None
@@ -44,29 +46,26 @@ class scheduleDay(tk.Frame):
         self.tv.grid(row=1, column=0, columnspan=20, padx=0, pady=20)
 
         ttk.Style().configure("Treeview", font= ('Verdana', 12), background="#383838", 
-        foreground="white", fieldbackground="yellow")
+        foreground="white", fieldbackground="grey")
 
         self.Fill_Treeview()
 
     def Fill_Treeview(self):
         # Requests for data  : May take time
         jsonData = req.RequestController.RetrieveData(True)
+
         # Fill treeview
         n = 1
         while(n != 16):
             if (jsonData == ["Lost"]):
-                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 2, column=3)
+                ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
                 break
             b = 0
             for data in jsonData:
-                if ( data['StartBlock'] == n):
-                    while (data['StartBlock'] + b < data['EndBlock']+ 1):
-                        if(len(data["Classes"]) >= 1):
-                            self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], data['Classes'][0]['Name'], data['CourseCode']))
-                            b = b + 1
-                        else:
-                            self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data['Teacher'], "None", data['CourseCode']))
-                            b = b + 1
+                if ( data.StartBlock == n):
+                    while (data.StartBlock + b < data.EndBlock + 1):
+                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
+                        b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))
                 n = n + 1
@@ -82,6 +81,7 @@ class scheduleDay(tk.Frame):
         except:
             print("Nothing selected :/")
         
+
     def reserve_room(self,selected):
         try:
             item = self.tv.selection()[0]
@@ -96,6 +96,7 @@ class scheduleDay(tk.Frame):
                                       "Student gereserveerd",
                                       "Student gereserveerd",
                                       "Zelf studie"))
+
 
     def delete_reservation(self):
         try:
@@ -122,11 +123,11 @@ class scheduleDay(tk.Frame):
         HROpicture.grid(row= 0, column=0)
 
         # Pictures and everything
-        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=4)
+        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1)
         
-        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=9)
+        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=2)
         
-        ttk.Label(self,text="De temperatuur in lokaal "+ req.room +" is: \n" + str(TkinterEntry.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=10)
+        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(TkinterEntry.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
 
         #Options for reserving - NOT USED
         #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")
