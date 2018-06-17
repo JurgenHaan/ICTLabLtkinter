@@ -21,6 +21,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ConfigFileParser.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DaySchedule.py">
       <SubType>Code</SubType>
     </Compile>
@@ -28,6 +31,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RequestController.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RoomClass.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TextFileReader.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="UnitTest.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="WeekSchedule.py">
@@ -38,6 +50,9 @@
   <ItemGroup>
     <Content Include="jsonRoom.txt">
       <Publish>True</Publish>
+    </Content>
+    <Content Include="RoomNumber.ini">
+      <SubType>Code</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />

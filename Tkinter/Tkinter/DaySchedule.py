@@ -2,15 +2,17 @@ import TkinterEntry
 import WeekSchedule as weekSchedule
 import FrameController as frameController
 import RequestController as req
-
+import ConfigFileParser
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 
 class scheduleDay(tk.Frame):
-    def __init__(self, master):  
+    def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
+
+        self.room = ConfigFileParser.ConfigFileParser()
 
         # Sets selected item to none
         self.selected_item = None
@@ -121,11 +123,11 @@ class scheduleDay(tk.Frame):
         HROpicture.grid(row= 0, column=0)
 
         # Pictures and everything
-        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=4)
+        ttk.Button(self, text="Week rooster", width=20,padding= 5, command=lambda:self.master.switch_frame(weekSchedule.scheduleWeek)).grid(row=0,column=1)
         
-        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=9)
+        ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=2)
         
-        ttk.Label(self,text="De temperatuur in lokaal "+ req.room +" is: \n" + str(TkinterEntry.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=10)
+        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(TkinterEntry.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
 
         #Options for reserving - NOT USED
         #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")

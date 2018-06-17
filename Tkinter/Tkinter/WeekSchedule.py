@@ -4,11 +4,14 @@ import tkinter as tk
 from tkinter import ttk
 import RequestController as req
 from PIL import Image,ImageTk
+import ConfigFileParser
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
+
+        self.room = ConfigFileParser.ConfigFileParser()
 
         self.master = master
 
@@ -68,5 +71,5 @@ class scheduleWeek(tk.Frame):
         # Refresh screen button - if information might have changed
         ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=2)
 
-        ttk.Label(self,text="Welkom in lokaal "+ req.room,font="Verdana 9 bold").grid(row= 0, column=3)
+        ttk.Label(self,text="Welkom in lokaal "+ str(self.room),font="Verdana 9 bold").grid(row= 0, column=3)
         
