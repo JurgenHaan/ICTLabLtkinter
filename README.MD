@@ -11,3 +11,28 @@ This page is used for an introduction and walkthrough on the installation of the
 <p>- GroveKit+</p>
 <p>- A Monitor ( or a raspberry pi with xrdp installed for remote access)</p>
 <p>- Network connection</p>
+
+<p>The raspberry needs some more libraries in order to work properly. These libraries are:</p>
+<p>- ImageTK ( For displaying the picture on the screen ) </p>
+<p>- Requests (In order to send and receive data over internet)</p>
+<p>- Grove pi library ( /for the sensors to work)</p>
+
+<h3>Installation</h3
+
+<p>Once inside the Raspberry, clone this repository</p>
+<code>sudo git clone https://github.com/JurgenHaan/ICTLabtkinter.git</code>
+
+<p>When this is done, you need be able to make "WRITE" changes to this folder. This application is writing data to 2 text documents.</p>
+<p>In order to make "WRITE" permissions in the folder, execute this command ( You might need to change the location) :</p>
+<code>sudo chmod -R 777 /home/pi/ICTLabtkinter</code>
+
+<p>When that is all finished, it is time to install the Python Imaging Library, or PIL</p>
+<p>This is done by:</p>
+<code>sudo apt-get install python-imaging</code>
+<code>sudo apt-get install python3-pil.imagetk</code>
+
+<p>The Raspberry Pi needs to make requests to the internet. For this, we need the library Reqeusts. This is installed by:</p>
+<code>sudo pip3 install requests</code>
+
+<p>Last but not least, we need to install the library for the GroveKit. This is done by retrieving the Github repository of DexterInd with this command:</p>
+<code>sudo curl -kL dexterindustries.com/update_grovepi | bash</code>
