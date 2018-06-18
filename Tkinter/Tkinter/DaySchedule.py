@@ -1,4 +1,3 @@
-import TkinterEntry
 import WeekSchedule as weekSchedule
 import FrameController as frameController
 import RequestController as req
@@ -7,14 +6,18 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import RetrieveBooking
+import grovepi
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
-
+        try:
+            self.temperatuur = grovepi.dht(4,0)
+        except:
+            self.temperatuur = "21"
         self.room = ConfigFileParser.ConfigFileParser()
-
+        self.startList = ["Start"," 8:30"," 9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
         # Sets selected item to none
         self.selected_item = None
 
@@ -65,16 +68,16 @@ class scheduleDay(tk.Frame):
             for data in jsonData:
                 if ( data.StartBlock == n):
                     while (data.StartBlock + b < data.EndBlock + 1):
-                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
+                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
                         b = b + 1
             for data in bookingData:
                 print(data.StartBlock)
                 if (data.StartBlock == n):
                     while (data.StartBlock + b < data.EndBlock + 1):
-                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], "Geboekt", " Student", data.CourseCode))
+                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student", data.CourseCode))
                         b = b + 1
             if (b == 0 or jsonData == []):
-                self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))
+                self.tv.insert("","end",text = "",values = (n,self.startList[n],"","",""))
                 n = n + 1
             else:
                 n = n + b
@@ -134,7 +137,7 @@ class scheduleDay(tk.Frame):
         
         ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=2)
         
-        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(TkinterEntry.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
+        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
 
         #Options for reserving - NOT USED
         #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")

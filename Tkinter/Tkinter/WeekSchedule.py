@@ -1,4 +1,3 @@
-import TkinterEntry
 import DaySchedule as DaySchedule
 import tkinter as tk
 from tkinter import ttk
@@ -6,14 +5,20 @@ import RequestController as req
 from PIL import Image,ImageTk
 import ConfigFileParser
 import RetrieveBooking
+import grovepi
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
-
+        try:
+            self.temperatuur = grovepi.dht(4,0)
+        except:
+            self.temperatuur = "21"
         self.room = ConfigFileParser.ConfigFileParser()
-
+        self.dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
+        self.lesList = ["Les uur / Tijd ","1 ","2 ","3","4","5","6","7","8","9","10","11","12","13","14","15"]
+        self.startList = ["Start"," 8:30"," 9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
         self.master = master
 
         self.init_buttons()
@@ -26,12 +31,12 @@ class scheduleWeek(tk.Frame):
         cols = 0
         rows = 0
 
-        tk.Label(self, text=TkinterEntry.lesList[cols],font="Verdana 10 bold").grid(row=1,column=0)
+        tk.Label(self, text=self.lesList[cols],font="Verdana 10 bold").grid(row=1,column=0)
         while ( cols < 5):
-            tk.Label(self, text=TkinterEntry.dagList[cols],font="Verdana 10 bold").grid(row=1,column=cols + 1)
+            tk.Label(self, text=self.dagList[cols],font="Verdana 10 bold").grid(row=1,column=cols + 1)
             cols = cols + 1
         while ( rows < 15):
-            tk.Label(self, text=TkinterEntry.lesList[rows + 1] + "  :  " + TkinterEntry.startList[rows+ 1],font="Verdana 10 bold").grid(row=rows + 2,column=0)
+            tk.Label(self, text=self.lesList[rows + 1] + "  :  " + self.startList[rows+ 1],font="Verdana 10 bold").grid(row=rows + 2,column=0)
             rows = rows + 1
 
     def Fill_inner(self):
@@ -77,5 +82,5 @@ class scheduleWeek(tk.Frame):
         # Refresh screen button - if information might have changed
         ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=2)
 
-        ttk.Label(self,text="Welkom in lokaal "+ str(self.room),font="Verdana 9 bold").grid(row= 0, column=3)
+        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
         
