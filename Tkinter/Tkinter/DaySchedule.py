@@ -6,6 +6,7 @@ import ConfigFileParser
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
+import RetrieveBooking
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):
@@ -52,12 +53,12 @@ class scheduleDay(tk.Frame):
 
     def Fill_Treeview(self):
         # Requests for data  : May take time
-        jsonData = req.RequestController.RetrieveData(True)
-
+        jsonData = req.RetrieveRooms.RetrieveData(True,False)
+        bookingData = RetrieveBooking.RetrieveBooking.RetrieveBookingData(False,True)
         # Fill treeview
         n = 1
         while(n != 16):
-            if (jsonData == ["Lost"]):
+            if (jsonData == ["Lost"] or bookingData == ["Lost"]):
                 ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
                 break
             b = 0
@@ -65,6 +66,12 @@ class scheduleDay(tk.Frame):
                 if ( data.StartBlock == n):
                     while (data.StartBlock + b < data.EndBlock + 1):
                         self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
+                        b = b + 1
+            for data in bookingData:
+                print(data.StartBlock)
+                if (data.StartBlock == n):
+                    while (data.StartBlock + b < data.EndBlock + 1):
+                        self.tv.insert("","end",text = "",values = (n + b,TkinterEntry.startList[n + b], "Geboekt", " Student", data.CourseCode))
                         b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,TkinterEntry.startList[n],"","",""))

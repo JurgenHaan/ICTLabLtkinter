@@ -1,7 +1,8 @@
 class Rooms:
     def __init__(self,jsondata):
         self.Id = jsondata["Id"]
-        self.Week = jsondata["WeekDay"]
+        self.Week = jsondata["Week"]
+        self.WeekDay = jsondata["WeekDay"]
         self.StartBlock = jsondata["StartBlock"]
         self.EndBlock = jsondata["EndBlock"]
         self.Teacher = jsondata["Teacher"]

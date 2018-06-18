@@ -1,6 +1,5 @@
 import tkinter as tk
 import DaySchedule as daySchedule
-import WeekSchedule as weekSchedule
 
 class scheduleMainScreen(tk.Tk):
     def __init__(self):

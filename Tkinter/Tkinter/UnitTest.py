@@ -11,4 +11,4 @@ class RoomClassTest(unittest.TestCase):
 
     def test_configFileReader(self):
         config = ConfigFileParser.ConfigFileParser()
-        self.assertEqual("WD.02.016",str(config))
+        self.assertEqual("H.1.318",str(config))

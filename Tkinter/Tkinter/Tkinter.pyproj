@@ -21,7 +21,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="BookingClass.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ConfigFileParser.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataFormer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DaySchedule.py">
@@ -31,6 +37,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RequestController.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="RetrieveBooking.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RoomClass.py">
@@ -48,6 +57,9 @@
     <Compile Include="TkinterEntry.py" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="jsonBooking.txt">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="jsonRoom.txt">
       <Publish>True</Publish>
     </Content>
