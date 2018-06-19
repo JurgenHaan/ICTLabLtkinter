@@ -18,7 +18,7 @@ The raspberry needs some more libraries in order to work properly. These librari
 - Grove pi library ( for the sensors to work)
 - Simplejson ( Python has a built in library but for some reason, the RPI didn't like that one. If you use the application on the desktop, it will be fine without this library)
 
-<h3>Installation</h3
+Installation
 
 Once inside the Raspberry, clone this repository:
 
