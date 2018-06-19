@@ -21,7 +21,7 @@ class DataFormer:
         newJsonData = []
         if(booking):
             for data in jsonData:
-                if (data['WeekDay'] == date.today().isocalendar()[2] and data['Classroom'] == roomNumber):
+                if (data['WeekDay'] == date.today().isocalendar()[2]):
                     newJsonData.append(BookingClass.BookingClass(data))
             return newJsonData
         # Filters json for the day of the week.
