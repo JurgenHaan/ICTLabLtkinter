@@ -4,7 +4,7 @@ This page is used for an introduction and walkthrough on the installation of the
 </p>
 <h2> Getting Started </h2>
 <p>Inside of this Readme file, there will be a walkthrough on how to make the Raspberry Pi work with the libraries</p>
-
+</hr>
 <h3>Prerequisites</h3>
 <p><b>For this you need:</b></p
 <p>- A Raspberry Pi</p>
@@ -15,7 +15,8 @@ This page is used for an introduction and walkthrough on the installation of the
 <p>The raspberry needs some more libraries in order to work properly. These libraries are:</p>
 <p>- ImageTK ( For displaying the picture on the screen ) </p>
 <p>- Requests (In order to send and receive data over internet)</p>
-<p>- Grove pi library ( /for the sensors to work)</p>
+<p>- Grove pi library ( for the sensors to work)</p>
+<p>- Simplejson ( Python has a built in library but for some reason, the RPI didn't like that one. If you use the application on the desktop, it will be fine without this library)</p>
 
 <h3>Installation</h3
 
