@@ -6,6 +6,7 @@ import BookingClass
 import TextFileReader
 from datetime import date
 import FrameController
+import RetrieveBooking
 
 class RoomClassTest(unittest.TestCase):
 
@@ -49,3 +50,13 @@ class RoomClassTest(unittest.TestCase):
         new_stuff_check = TextFileReader.TextFileReader.ReadFromFile("jsonRoom.txt")
         self.assertEqual(new_stuff,new_stuff_check)
         TextFileReader.TextFileReader.SaveToFile(old_stuff,"jsonRoom.txt")
+
+        #If this return as equals then there is no data and parsing went wrong
+    def test_RequestRoomsShouldNotReturnLost(self):
+        ShouldNotReturnLost = RequestController.RetrieveRooms()
+        self.assertNotEqual(ShouldNotReturnLost, ["Lost"])
+
+        #If this return as equals then there is no data and parsing went wrong
+    def test_RequestBookedRoomsShouldNotReturnLost(self):
+        ShouldNotReturnLost = RetrieveBooking.RetrieveBooking()
+        self.assertNotEqual(ShouldNotReturnLost, ["Lost"])
