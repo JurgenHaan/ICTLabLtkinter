@@ -41,6 +41,6 @@ This page is used for an introduction and walkthrough on the installation of the
 <code>sudo curl -kL dexterindustries.com/update_grovepi | bash</code>
 
 <h2> Running the application </h2>
-<p>The appliication can be started by opening the file TkinterEntry.py.</p>
+<p>The application can be started by opening the file TkinterEntry.py.</p>
 <p>Or, if you are using a Visual Studio version, it can be run by opening the Tkinter.sln file included in the repository</p>
 <p>If the application gives an error of any kind, check to see if you have every library installed, especially the grovepi module, ran every command written above or have the GroveKit enabled on your device.</p>
