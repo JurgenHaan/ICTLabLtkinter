@@ -12,7 +12,10 @@ class scheduleWeek(tk.Frame):
         # Init frame
         tk.Frame.__init__(self,master)
         try:
-            self.temperatuur = grovepi.dht(4,0)
+            [temperatuur,humidity] = grovepi.dht(4,0)
+            self.temp = temperatuur
+        except:
+            raise Exception("No module attached!")
         self.room = ConfigFileParser.ConfigFileParser()
         self.dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
         self.lesList = ["Les uur / Tijd ","1 ","2 ","3","4","5","6","7","8","9","10","11","12","13","14","15"]
