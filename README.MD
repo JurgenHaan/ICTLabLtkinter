@@ -45,3 +45,6 @@ This page is used for an introduction and walkthrough on the installation of the
 <p>The application can be started by opening the file TkinterEntry.py.</p>
 <p>Or, if you are using a Visual Studio version, it can be run by opening the Tkinter.sln file included in the repository</p>
 <p>If the application gives an error of any kind, check to see if you have every library installed, especially the grovepi module, ran every command written above or have the GroveKit enabled on your device.</p>
+
+<h3>Adapting data</h3>
+<p>If you want to retrieve different data than the room that is currently programmed in, you need to edit the config.ini to a existing room. If you change this, then you can also change the UnitTest.py. This one checks if the file is readable by giving it a string and comparing this string to output. You just need change the string to the classroom you want.
