@@ -5,7 +5,6 @@ import RequestController as req
 from PIL import Image,ImageTk
 import ConfigFileParser
 import RetrieveBooking
-import grovepi
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):

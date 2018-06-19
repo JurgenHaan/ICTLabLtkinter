@@ -13,12 +13,10 @@ class RetrieveBooking:
             #requests for data  : May take time
             request = requests
             room = ConfigFileParser.ConfigFileParser()
-            url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/MyBookings/"+ str(date.today().isocalendar()[1])
             authString = str(base64.b64encode(bytes("Pi:" + str(room),"utf8")))
-            print(authString[1:].strip("'"))
-            response = request.get(url,headers = {'Authorization': 'Basic ' + authString[1:].strip("'")})  
+            url = "http://acceptancetimetable2api.azurewebsites.net/api/Booking/Bookings/"+str(room)+"/"+ str(date.today().isocalendar()[1])
+            response = request.get(url,headers = {'Authorization': 'Basic ' + authString[1:].strip("'")})   
             jsonData = json.loads(response.content)
-            print(response.content)
             return DataFormer.DataFormer.FormData(jsonData,day,"jsonBooking.txt",booking)
         except:
             try:

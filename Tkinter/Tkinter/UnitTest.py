@@ -38,7 +38,7 @@ class RoomClassTest(unittest.TestCase):
 
     def test_SaveToTextFileAndReadItAgain(self):
         old_stuff = TextFileReader.TextFileReader.ReadFromFile("jsonRoom.txt")
-
+        print(old_stuff)
         new_stuff = [{"Id": "59ca7e3f-68bb-11e8-8697-525400c8e11c", "Week": date.today().isocalendar()[1], "WeekDay": 2, "StartBlock": 1, "EndBlock": 4, "Teacher": "AMMMQ", "Description": "SKC gesprekken", "CourseCode": None, "Classes": [], "Rooms": [{"RoomId": "H.1.114", "Capacity": 99, "Maintenance": 0}, {"RoomId": "H.1.306", "Capacity": 99, "Maintenance": 0}, {"RoomId": "H.1.312", "Capacity": 99, "Maintenance": 0}, {"RoomId": "H.1.315", "Capacity": 99, "Maintenance": 0}, {"RoomId": "H.1.110", "Capacity": 99, "Maintenance": 0}, {"RoomId": "H.1.112", "Capacity": 99, "Maintenance": 0}]}]
         TextFileReader.TextFileReader.SaveToFile(new_stuff,"jsonRoom.txt")
         new_stuff_check = TextFileReader.TextFileReader.ReadFromFile("jsonRoom.txt")

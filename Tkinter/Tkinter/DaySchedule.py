@@ -6,7 +6,6 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import RetrieveBooking
-import grovepi
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):
@@ -74,7 +73,7 @@ class scheduleDay(tk.Frame):
                 print(data.StartBlock)
                 if (data.StartBlock == n):
                     while (data.StartBlock + b < data.EndBlock + 1):
-                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student", data.CourseCode))
+                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
                         b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,self.startList[n],"","",""))
