@@ -31,8 +31,16 @@ This page is used for an introduction and walkthrough on the installation of the
 <code>sudo apt-get install python-imaging</code>
 <code>sudo apt-get install python3-pil.imagetk</code>
 
-<p>The Raspberry Pi needs to make requests to the internet. For this, we need the library Reqeusts. This is installed by:</p>
+<p>The Raspberry Pi needs to make requests to the internet. For this, we need the libraries Reqeusts and simplejson. This is installed by:</p>
 <code>sudo pip3 install requests</code>
+<code>sudo pip3 install simplejson</code>
 
 <p>Last but not least, we need to install the library for the GroveKit. This is done by retrieving the Github repository of DexterInd with this command:</p>
+
+
 <code>sudo curl -kL dexterindustries.com/update_grovepi | bash</code>
+
+<h2> Running the application </h2>
+<p>The appliication can be started by opening the file TkinterEntry.py.</p>
+<p>Or, if you are using a Visual Studio version, it can be run by opening the Tkinter.sln file included in the repository</p>
+<p>If the application gives an error of any kind, check to see if you have every library installed, especially the grovepi module, ran every command written above or have the GroveKit enabled on your device.</p>
