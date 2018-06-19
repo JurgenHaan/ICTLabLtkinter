@@ -72,7 +72,6 @@ class scheduleDay(tk.Frame):
                         self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
                         b = b + 1
             for data in bookingData:
-                print(data.StartBlock)
                 if (data.StartBlock == n):
                     while (data.StartBlock + b < data.EndBlock + 1):
                         self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
@@ -140,6 +139,6 @@ class scheduleDay(tk.Frame):
         
         ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temp)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
 
-        #Options for reserving - NOT USED
+        #Options for reserving - NOT USED BUT MAYBE FOR IN THE FUTURE OR EXTRA'S
         #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")
         #ttk.Button(self, text = "Verwijder reservering", width=25, command=lambda:self.delete_reservation()).grid(row=0, column=7, sticky="W")

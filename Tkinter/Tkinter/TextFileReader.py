@@ -24,7 +24,6 @@ class TextFileReader:
             verifyData = dataset[0]
             if(date.today().isocalendar()[1] != verifyData['Week']):
                 raise Exception("Lost!")
-            print(dataset)
             return dataset
 
 
