@@ -1,6 +1,6 @@
 import requests
 from datetime import date
-import json
+import simplejson
 import base64
 import ConfigFileParser
 import RoomClass
@@ -17,7 +17,7 @@ class RetrieveRooms():
             url = "http://acceptancetimetable2api.azurewebsites.net/api/Schedule/Classroom/"+ str(room) + "/" + str(date.today().isocalendar()[1])
             authString = str(base64.b64encode(bytes("Pi:" + str(room),"utf8")))
             response = request.get(url,headers = {'Authorization': 'Basic ' + authString[1:].strip("'")})   
-            jsonData = json.loads(response.content)
+            jsonData = simplejson.loads(response.content)
 
             return DataFormer.DataFormer.FormData(jsonData,day,"jsonRoom.txt",booking)
         except:

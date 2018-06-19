@@ -1,7 +1,7 @@
 import requests
 import ConfigFileParser
 import base64
-import json
+import simplejson
 import RequestController
 import DataFormer
 import TextFileReader
@@ -16,7 +16,7 @@ class RetrieveBooking:
             authString = str(base64.b64encode(bytes("Pi:" + str(room),"utf8")))
             url = "http://acceptancetimetable2api.azurewebsites.net/api/Booking/Bookings/"+str(room)+"/"+ str(date.today().isocalendar()[1])
             response = request.get(url,headers = {'Authorization': 'Basic ' + authString[1:].strip("'")})   
-            jsonData = json.loads(response.content)
+            jsonData = simplejson.loads(response.content)
             return DataFormer.DataFormer.FormData(jsonData,day,"jsonBooking.txt",booking)
         except:
             try:

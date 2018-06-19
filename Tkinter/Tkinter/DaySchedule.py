@@ -6,14 +6,16 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import RetrieveBooking
-import grovepi
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
         try:
-            self.temperatuur = grovepi.dht(4,0)
+            [temperatuur,humidity] = grovepi.dht(4,0)
+            self.temp = temperatuur
+        except:
+            raise Exception("No module attached!")
         self.room = ConfigFileParser.ConfigFileParser()
         self.startList = ["Start"," 8:30"," 9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
         # Sets selected item to none
