@@ -5,6 +5,7 @@ import RequestController as req
 from PIL import Image,ImageTk
 import ConfigFileParser
 import RetrieveBooking
+import grovepi
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
@@ -12,8 +13,6 @@ class scheduleWeek(tk.Frame):
         tk.Frame.__init__(self,master)
         try:
             self.temperatuur = grovepi.dht(4,0)
-        except:
-            self.temperatuur = "21"
         self.room = ConfigFileParser.ConfigFileParser()
         self.dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
         self.lesList = ["Les uur / Tijd ","1 ","2 ","3","4","5","6","7","8","9","10","11","12","13","14","15"]
