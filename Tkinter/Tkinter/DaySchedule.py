@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import RetrieveBooking
+import grovepi as grovepi
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):
@@ -137,7 +138,7 @@ class scheduleDay(tk.Frame):
         
         ttk.Button(self, text="Refresh", width=20, padding= 5, command=lambda:self.master.switch_frame(scheduleDay)).grid(row=0,column=2)
         
-        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
+        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temp)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
 
         #Options for reserving - NOT USED
         #ttk.Button(self, text = "Reserveer kamer", width=20, command=lambda:self.reserve_room(self.selected_item)).grid(row=0, column=5, sticky="W")

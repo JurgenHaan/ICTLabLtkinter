@@ -5,7 +5,7 @@ import RequestController as req
 from PIL import Image,ImageTk
 import ConfigFileParser
 import RetrieveBooking
-import grovepi
+import grovepi as grovepi
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
@@ -83,5 +83,5 @@ class scheduleWeek(tk.Frame):
         # Refresh screen button - if information might have changed
         ttk.Button(self, text="Refresh", width=20,padding= 5, command=lambda:self.master.switch_frame(scheduleWeek)).grid(row=0,column=2)
 
-        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temperatuur)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
+        ttk.Label(self,text="De temperatuur in lokaal "+ str(self.room) +" is: \n" + str(self.temp)+ " graden.",font="Verdana 9 bold").grid(row= 0, column=3)
         
