@@ -4,7 +4,7 @@ This page is used for an introduction and walkthrough on the installation of the
 </p>
 <h2> Getting Started </h2>
 <p>Inside of this Readme file, there will be a walkthrough on how to make the Raspberry Pi work with the libraries</p>
-</hr>
+
 <h3>Prerequisites</h3>
 <p><b>For this you need:</b></p
 <p>- A Raspberry Pi</p>
