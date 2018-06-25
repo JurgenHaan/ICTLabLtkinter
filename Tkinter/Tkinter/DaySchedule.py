@@ -12,11 +12,8 @@ class scheduleDay(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
-        try:
-            [temperatuur,humidity] = grovepi.dht(4,0)
-            self.temp = temperatuur
-        except:
-            raise Exception("No module attached!")
+        [temp,hum] = grovepi.dht(4,0)
+        self.temp = temp
         self.room = ConfigFileParser.ConfigFileParser()
         self.startList = ["Start"," 8:30"," 9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
         # Sets selected item to none
@@ -61,8 +58,9 @@ class scheduleDay(tk.Frame):
         bookingData = RetrieveBooking.RetrieveBooking.RetrieveBookingData(False,True)
         # Fill treeview
         n = 1
+        print(bookingData)
         while(n != 16):
-            if (jsonData == ["Lost"] or bookingData == ["Lost"]):
+            if (jsonData == ["Lost"] and bookingData == ["Lost"]):
                 ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
                 break
             b = 0
@@ -71,11 +69,12 @@ class scheduleDay(tk.Frame):
                     while (data.StartBlock + b < data.EndBlock + 1):
                         self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
                         b = b + 1
-            for data in bookingData:
-                if (data.StartBlock == n):
-                    while (data.StartBlock + b < data.EndBlock + 1):
-                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
-                        b = b + 1
+            if(bookingData != ["Lost"]):
+                for data in bookingData:
+                    if (data.StartBlock == n):
+                        while (data.StartBlock + b < data.EndBlock + 1):
+                            self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
+                            b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,self.startList[n],"","",""))
                 n = n + 1

@@ -27,7 +27,7 @@ class RoomClassTest(unittest.TestCase):
         #Checks if the config file is readable. CHANGE THIS IF YOU MAKE CHANGES TO CONFIG.INI!
     def test_configFileReader(self):
         config = ConfigFileParser.ConfigFileParser()
-        self.assertEqual("H.1.318",str(config))
+        self.assertNotEqual(None,str(config))
 
         #Converts Json into a Booked Room class
     def test_ConvertJsonStringToBookingClass(self):

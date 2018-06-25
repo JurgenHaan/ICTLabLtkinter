@@ -11,11 +11,8 @@ class scheduleWeek(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
-        try:
-            [temperatuur,humidity] = grovepi.dht(4,0)
-            self.temp = temperatuur
-        except:
-            raise Exception("No module attached!")
+        [temp,hum] = grovepi.dht(4,0)
+        self.temp = temp
         self.room = ConfigFileParser.ConfigFileParser()
         self.dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
         self.lesList = ["Les uur / Tijd ","1 ","2 ","3","4","5","6","7","8","9","10","11","12","13","14","15"]
@@ -46,8 +43,9 @@ class scheduleWeek(tk.Frame):
         bookingData = RetrieveBooking.RetrieveBooking.RetrieveBookingData(False,True)
         # Fill inner schedule
         cols = 1
+        print(bookingData)
         while ( cols < 6):
-            if (jsonData == ["Lost"] or bookingData == ["Lost"]):
+            if (jsonData == ["Lost"] and bookingData == ["Lost"]):
                 ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row=8, column=3)
                 break
             rows = 2
@@ -58,11 +56,12 @@ class scheduleWeek(tk.Frame):
                         while (data.StartBlock + b < data.EndBlock + 1):
                             tk.Label(self, text=str(data.Classes[0]['Name']) + " "  + str(data.Teacher) + " " + str(data.CourseCode),font="Verdana 9").grid(row=rows + b,column=cols )
                             b = b + 1
-                for data in bookingData:
-                    if (data.WeekDay == cols and data.StartBlock == rows - 1):
-                        while (data.StartBlock + b < data.EndBlock + 1):
-                            tk.Label(self, text=str("Gereserveerd"),font="Verdana 9").grid(row=rows + b,column=cols )
-                            b = b + 1
+                if(bookingData != ["Lost"]):
+                    for data in bookingData:
+                        if (data.WeekDay == cols and data.StartBlock == rows - 1):
+                            while (data.StartBlock + b < data.EndBlock + 1):
+                                tk.Label(self, text=str("Gereserveerd"),font="Verdana 9").grid(row=rows + b,column=cols )
+                                b = b + 1
                 if (b == 0):
                     tk.Label(self, text="").grid(row=rows,column=cols)
                     rows = rows + 1
