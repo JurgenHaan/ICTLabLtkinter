@@ -6,7 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk
 import RetrieveBooking
-import grovepi as grovepi
+import grovepi
 
 class scheduleDay(tk.Frame):
     def __init__(self, master):
@@ -58,7 +58,6 @@ class scheduleDay(tk.Frame):
         bookingData = RetrieveBooking.RetrieveBooking.RetrieveBookingData(False,True)
         # Fill treeview
         n = 1
-        print(bookingData)
         while(n != 16):
             if (jsonData == ["Lost"] and bookingData == ["Lost"]):
                 ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
@@ -69,12 +68,11 @@ class scheduleDay(tk.Frame):
                     while (data.StartBlock + b < data.EndBlock + 1):
                         self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
                         b = b + 1
-            if(bookingData != ["Lost"]):
-                for data in bookingData:
-                    if (data.StartBlock == n):
-                        while (data.StartBlock + b < data.EndBlock + 1):
-                            self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
-                            b = b + 1
+            for data in bookingData:
+                if (data.StartBlock == n):
+                    while (data.StartBlock + b < data.EndBlock + 1):
+                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
+                        b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,self.startList[n],"","",""))
                 n = n + 1
