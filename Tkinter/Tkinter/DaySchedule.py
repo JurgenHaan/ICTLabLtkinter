@@ -63,16 +63,18 @@ class scheduleDay(tk.Frame):
                 ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
                 break
             b = 0
-            for data in jsonData:
-                if ( data.StartBlock == n):
-                    while (data.StartBlock + b < data.EndBlock + 1):
-                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
-                        b = b + 1
-            for data in bookingData:
-                if (data.StartBlock == n):
-                    while (data.StartBlock + b < data.EndBlock + 1):
-                        self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
-                        b = b + 1
+            if(jsonData != []):
+                for data in jsonData:
+                    if ( data.StartBlock == n):
+                        while (data.StartBlock + b < data.EndBlock + 1):
+                            self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], data.Teacher, data.Classes[0]['Name'], data.CourseCode))
+                            b = b + 1
+            if(bookingData != [] and bookingData != ['Lost'] ):
+                for data in bookingData:
+                    if (data.StartBlock == n):
+                        while (data.StartBlock + b < data.EndBlock + 1):
+                            self.tv.insert("","end",text = "",values = (n + b,self.startList[n + b], "Geboekt", " Student",""))
+                            b = b + 1
             if (b == 0 or jsonData == []):
                 self.tv.insert("","end",text = "",values = (n,self.startList[n],"","",""))
                 n = n + 1

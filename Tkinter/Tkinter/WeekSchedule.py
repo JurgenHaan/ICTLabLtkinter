@@ -5,7 +5,7 @@ import RequestController as req
 from PIL import Image,ImageTk
 import ConfigFileParser
 import RetrieveBooking
-import grovepi 
+import grovepi
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
@@ -45,16 +45,18 @@ class scheduleWeek(tk.Frame):
         if (jsonData == ["Lost"] and bookingData == ["Lost"]):
             ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
             pass
-        for data in jsonData:
-            b = 0
-            while (data.StartBlock + b < data.EndBlock + 1):
-                b = b + 1
-                tk.Label(self, text=str(data.Classes[0]['Name']) + " "  + str(data.Teacher) + " " + str(data.CourseCode),font="Verdana 9").grid(row=data.StartBlock + b,column=data.WeekDay )
-        for data in bookingData:
-            b = 0
-            while (data.StartBlock + b < data.EndBlock + 1):
-                b = b + 1
-                tk.Label(self, text=str("Gereserveerd"),font="Verdana 9").grid(row=data.StartBlock + b,column=data.WeekDay )
+        if(jsonData != []):
+            for data in jsonData:
+                b = 0
+                while (data.StartBlock + b < data.EndBlock + 1):
+                    b = b + 1
+                    tk.Label(self, text=str(data.Classes[0]['Name']) + " "  + str(data.Teacher) + " " + str(data.CourseCode),font="Verdana 9").grid(row=data.StartBlock + b,column=data.WeekDay )
+        if(bookingData != [] and bookingData != ['Lost'] ):
+            for data in bookingData:
+                b = 0
+                while (data.StartBlock + b < data.EndBlock + 1):
+                    b = b + 1
+                    tk.Label(self, text=str("Gereserveerd"),font="Verdana 9").grid(row=data.StartBlock + b,column=data.WeekDay )
                     
     def init_buttons(self):
         # HRO image load
