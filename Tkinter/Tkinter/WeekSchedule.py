@@ -4,15 +4,14 @@ from tkinter import ttk
 import RequestController as req
 from PIL import Image,ImageTk
 import ConfigFileParser
-import RetrieveBooking
-import grovepi
+#import grovepi
 
 class scheduleWeek(tk.Frame):
     def __init__(self, master):
         # Init frame
         tk.Frame.__init__(self,master)
-        [temp,hum] = grovepi.dht(4,0)
-        self.temp = temp
+        #[temp,hum] = grovepi.dht(4,0)
+        self.temp = 21
         self.room = ConfigFileParser.ConfigFileParser()
         self.dagList = ["Maandag", "Dinsdag", "Woensdag","Donderdag","Vrijdag"]
         self.lesList = ["Les uur / Tijd ","1 ","2 ","3","4","5","6","7","8","9","10","11","12","13","14","15"]
@@ -39,8 +38,8 @@ class scheduleWeek(tk.Frame):
 
     def Fill_inner(self):
         # Retrieve data
-        jsonData = req.RetrieveRooms.RetrieveData(False,False)
-        bookingData = RetrieveBooking.RetrieveBooking.RetrieveBookingData(False,True)
+        jsonData = req.RetrieveRooms.RetrieveData(False,False,"Schedule/Classroom/")
+        bookingData =  req.RetrieveRooms.RetrieveData(False,True,"Booking/Bookings/")
         # Fill inner schedule
         if (jsonData == ["Lost"] and bookingData == ["Lost"]):
             ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 7, column=3)

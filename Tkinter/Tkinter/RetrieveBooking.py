@@ -7,8 +7,9 @@ import DataFormer
 import TextFileReader
 from datetime import date
 
+# Class not used -- Used for debug
 class RetrieveBooking:
-    def RetrieveBookingData(day,booking):
+    def RetrieveBookingData(day,booking, endPoint):
         try:
             #requests for data  : May take time
             request = requests
