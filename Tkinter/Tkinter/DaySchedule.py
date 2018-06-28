@@ -13,7 +13,7 @@ class scheduleDay(tk.Frame):
         # Init frame
         tk.Frame.__init__(self,master)
         [temp,hum] = grovepi.dht(4,0)
-        self.temp = temp
+        self.temp = 21
         self.room = ConfigFileParser.ConfigFileParser()
         self.startList = ["Start"," 8:30"," 9:20", "10:30","11:20","12:10","13:00","13:50","15:00","15:50", "17:00", "17:50", "18:40", "19:30", "20:20","21:10"]
         # Sets selected item to none

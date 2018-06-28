@@ -43,9 +43,9 @@ class scheduleWeek(tk.Frame):
         bookingData = RetrieveBooking.RetrieveBooking.RetrieveBookingData(False,True)
         # Fill inner schedule
         if (jsonData == ["Lost"] and bookingData == ["Lost"]):
-            ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 3, column=0)
+            ttk.Label(self,text="Lost connection to server",font="Verdana 12 bold").grid(row= 7, column=3)
             pass
-        if(jsonData != []):
+        if(jsonData != [] and jsonData != ["Lost"]):
             for data in jsonData:
                 b = 0
                 while (data.StartBlock + b < data.EndBlock + 1):
